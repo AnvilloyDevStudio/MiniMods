@@ -7,7 +7,9 @@
     "MenuMixin",
     "RendererMixin",
     "TitleDisplayMixin",
-    "UpdaterMixin"
+    "UpdaterMixin",
+    "SpritePxMixin",
+    "TileMixin"
   ],
   "injectors": {
     "defaultRequire": 1

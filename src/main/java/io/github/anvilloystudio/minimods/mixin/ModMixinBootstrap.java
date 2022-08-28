@@ -6,8 +6,8 @@ import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 import org.spongepowered.asm.mixin.Mixins;
 
+import io.github.anvilloystudio.minimods.core.ModContainer;
 import io.github.anvilloystudio.minimods.core.Mods;
-import io.github.anvilloystudio.minimods.loader.ModContainer;
 import io.github.anvilloystudio.minimods.loader.ModLoadingHandler;
 
 public class ModMixinBootstrap {
@@ -19,7 +19,8 @@ public class ModMixinBootstrap {
 		MixinBootstrap.init();
 
 		// Load coremods Mixin config here
-		Mixins.addConfigurations("mixins.json");
+		Mixins.addConfigurations("mixins.json"); // API.
+		Mixins.addConfigurations("coremods-mixins.json"); // Coremods.
 
 		for (ModContainer mod : Mods.mods) {
 			ModLoadingHandler.secondaryPro.cur++;

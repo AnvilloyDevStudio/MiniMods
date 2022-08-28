@@ -24,6 +24,7 @@ import org.tinylog.Logger;
 
 import io.github.anvilloystudio.minimods.loader.ModHandler;
 import io.github.anvilloystudio.minimods.mixin.ModClassDelegate;
+import minicraft.core.Game;
 
 @SuppressWarnings("unused")
 public class GameTransformer {
@@ -131,7 +132,7 @@ public class GameTransformer {
 			return new ClassReader(data);
 		}
 
-		try (JarFile jar = new JarFile(GameTransformer.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath())) {
+		try (JarFile jar = new JarFile(Game.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath())) {
 			JarEntry entry = jar.getJarEntry(name.replace(".", "/").concat(".class"));
 			if (entry == null) return null;
 

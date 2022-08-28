@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "io.github.anvilloystudio.minimods.coremods.mixins",
+  "priority": 2147483647,
+  "mixins": [
+    "GameMixin",
+    "InitializerMixin",
+    "LevelMixin",
+    "PlayerMixin",
+    "UpdaterMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

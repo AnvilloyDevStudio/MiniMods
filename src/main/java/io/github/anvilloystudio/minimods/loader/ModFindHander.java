@@ -3,14 +3,15 @@ package io.github.anvilloystudio.minimods.loader;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.jar.JarFile;
 
 import org.tinylog.Logger;
 
+import io.github.anvilloystudio.minimods.core.ModContainer;
 import io.github.anvilloystudio.minimods.core.Mods;
+import io.github.anvilloystudio.minimods.loader.ModLoadingHandler.ModLoadingException;
 
 public class ModFindHander {
 	static void findMods() {
@@ -30,13 +31,11 @@ public class ModFindHander {
 						ModFindHander.class.getClassLoader()
 					);
 
-					try {
-						Mods.mods.add(new ModContainer(jar, child));
-					} catch (RuntimeException e) {
-						throw new RuntimeException("Unable to load mod: " + file.getName(), e);
-					}
+					ModContainer mod = new ModContainer(jar, child);
+					// Validating.
+					Mods.mods.add(mod);
 				} catch (IOException e) {
-					throw new UncheckedIOException(e);
+					throw new ModLoadingException(e);
 				}
 
 				ModLoadingHandler.secondaryPro.cur++;

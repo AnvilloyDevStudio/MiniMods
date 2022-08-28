@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import io.github.anvilloystudio.minimods.loader.ModContainer;
+import io.github.anvilloystudio.minimods.core.ModContainer;
 import minicraft.core.Game;
 import minicraft.core.io.InputHandler;
 import minicraft.core.io.Sound;

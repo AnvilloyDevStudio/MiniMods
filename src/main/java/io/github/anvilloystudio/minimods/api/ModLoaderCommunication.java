@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
-import io.github.anvilloystudio.minimods.loader.ModContainer;
+import io.github.anvilloystudio.minimods.core.ModContainer;
 
 public class ModLoaderCommunication {
 	/** The AppClassLoader of Game. */

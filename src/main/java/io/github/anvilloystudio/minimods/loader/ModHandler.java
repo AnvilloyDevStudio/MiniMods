@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.spongepowered.asm.service.MixinService;
 
 import io.github.anvilloystudio.minimods.api.ModLoaderCommunication;
+import io.github.anvilloystudio.minimods.core.ModContainer;
 import io.github.anvilloystudio.minimods.core.Mods;
 
 public class ModHandler {

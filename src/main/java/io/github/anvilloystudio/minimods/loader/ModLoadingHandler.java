@@ -138,7 +138,7 @@ public class ModLoadingHandler {
 
 		canvas.createBufferStrategy(3);
 		canvas.requestFocus();
-		new Thread(() -> frame.setVisible(true), "Window Starter").start();
+		frame.setVisible(true);
 		enabled = true;
 		rendering.start();
 	}
@@ -152,5 +152,11 @@ public class ModLoadingHandler {
 		frame.setVisible(false);
 		frame.dispose();
 		Logger.debug("Loading window closed.");
+	}
+
+	public static class ModLoadingException extends RuntimeException {
+		public ModLoadingException(String msg) { super(msg); }
+		public ModLoadingException(String msg, Throwable cause) { super(msg, cause); }
+		public ModLoadingException(Throwable cause) { super(cause); }
 	}
 }

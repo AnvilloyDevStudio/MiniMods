@@ -15,6 +15,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import org.tinylog.Logger;
+import org.tinylog.provider.ProviderRegistry;
 
 import io.github.anvilloystudio.minimods.core.GameTransformer;
 import io.github.anvilloystudio.minimods.core.Mods;
@@ -47,6 +48,8 @@ public class LoaderInitialization {
 		ModLoadingHandler.initLoadingScreen();
 		ModLoadingHandler.overallPro.text = "Starting Initialization";
 
+		// Initializing LoggingProvider...it would not work if don't initialize earlier.
+		ProviderRegistry.getLoggingProvider();
 		Mods.init();
 
 		Mods.launchGame(classLoader.getClassLoader(), args);
