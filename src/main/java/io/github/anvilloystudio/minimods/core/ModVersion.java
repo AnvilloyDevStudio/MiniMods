@@ -27,8 +27,7 @@ import org.tinylog.Logger;
  * Referring to https://docs.minecraftforge.net/en/1.14.x/conventions/versioning/.
  * <p>{@code MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH}
  * <p>Actual format {@code MAJOR.MINOR.PATCH[-INDEV]}.
- * <p>For self-defined mod api: mod meta "modApi" or using "version".
- * For target minicraft version: mod meta "gameVersion".
+ * <p>For target minicraft version: mod meta "gameVersion".
  * For target loader version: mod meta "loaderVersion".
  */
 public class ModVersion implements Comparable<ModVersion> {

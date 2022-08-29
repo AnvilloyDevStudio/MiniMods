@@ -32,7 +32,7 @@ public class ModFindHander {
 					);
 
 					ModContainer mod = new ModContainer(jar, child);
-					// Validating.
+					Mods.checkModToLoaderCompatibility(mod); // Validating.
 					Mods.mods.add(mod);
 				} catch (IOException e) {
 					throw new ModLoadingException(e);
@@ -41,6 +41,54 @@ public class ModFindHander {
 				ModLoadingHandler.secondaryPro.cur++;
 			}
 		}
+
+		int count = 0;
+        while (true) { // Sorting with their dependencies.
+            for (int i = 0; i < Mods.mods.size(); i++) {
+                if (count > Mods.mods.size()*Mods.mods.size()) {
+                    throw new ModLoadingException("Dependency structure too complex.");
+                }
+
+                ModContainer.ModMetadata.ModDependency[] deps = Mods.mods.get(i).metadata.getDependencies();
+                if (deps.length > 0) {
+                    int index = i;
+                    for (int j = 0; j < deps.length; j++) {
+                        ModContainer.ModMetadata.ModDependency n = deps[j];
+                        int jdx = Mods.mods.indexOf(Mods.mods.stream().filter(m -> m.metadata.modId.equals(n.modId)).findAny().orElse(null));
+                        if (jdx == -1) {
+                            if (n.essential) throw new ModLoadingException("Dependency not found: " + n.modId);
+							Logger.debug("Unessential dependency does not exist: {} for {}", n.modId, Mods.mods.get(i).metadata.modId);
+							continue; // Skip if not exist and not essential.
+                        } else if (!n.version.containsVersion(Mods.mods.get(jdx).metadata.version)) {
+							throw new ModLoadingException("Dependency not compatible: " + n.modId + " " + n.version + "; found: " + Mods.mods.get(jdx).metadata.version);
+						}
+
+                        if (jdx > index) index = jdx;
+                    }
+
+                    if (index > i) Mods.mods.add(index, Mods.mods.remove(i));
+                }
+
+                count++;
+            }
+
+            boolean valid = true;
+            for (int i = 0; i < Mods.mods.size(); i++) {
+                ModContainer.ModMetadata.ModDependency[] deps = Mods.mods.get(i).metadata.getDependencies();
+                if (deps.length > 0) {
+                    int index = i;
+                    for (int j = 0; j < deps.length; j++) {
+                        ModContainer.ModMetadata.ModDependency n = deps[j];
+                        int jdx = Mods.mods.indexOf(Mods.mods.stream().filter(m -> m.metadata.modId.equals(n.modId)).findAny().orElse(null));
+                        if (jdx > index) index = jdx;
+                    }
+
+                    if (index > i) valid = false;
+                }
+            }
+
+            if (valid) break;
+        }
 
 		ModLoadingHandler.secondaryPro.text = "Adding Paths";
 		for (ModContainer mod : Mods.mods) {

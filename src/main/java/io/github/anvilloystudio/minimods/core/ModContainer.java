@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.tinylog.Logger;
@@ -101,9 +103,11 @@ public class ModContainer {
 		public final String initpoint;
 		// Versioning.
 		public final ModVersion version;
-		public final ModVersion apiVersion;
+		// public final ModVersion apiVersion;
 		public final VersionRange gameVersion; // The target game version.
 		public final VersionRange loaderVersion; // The target loader version.
+		// Dependencies.
+		private final ArrayList<ModDependency> dependencies = new ArrayList<>();
 
 		private ModMetadata(JSONObject json) throws JSONException, MalformedModVersionFormatException {
 			modId = json.getString("id");
@@ -112,10 +116,10 @@ public class ModContainer {
 			name = json.getString("name");
 			description = json.optString("description");
 			version = new ModVersion(json.optString("version", "1.0.0"));
-			if (json.has("apiVersion")) {
-				apiVersion = new ModVersion(json.getString("apiVersion"));
-			} else
-				apiVersion = version;
+			// if (json.has("apiVersion")) {
+			// 	apiVersion = new ModVersion(json.getString("apiVersion"));
+			// } else
+			// 	apiVersion = version;
 
 			gameVersion = VersionRange.createFromVersionSpec(json.getString("gameVersion"));
 			loaderVersion = VersionRange.createFromVersionSpec(json.getString("loaderVersion"));
@@ -124,6 +128,27 @@ public class ModContainer {
 			entrypoint = json.optString("entrypoint");
 			preInitpoint = json.optString("preInitpoint");
 			initpoint = json.optString("initpoint");
+
+			if (json.has("dependencies")) {
+				JSONArray deps = json.getJSONArray("dependencies");
+				for (int i = 0; i < deps.length(); i++) {
+					dependencies.add(new ModDependency(deps.getJSONObject(i)));
+				}
+			}
+		}
+
+		public ModDependency[] getDependencies() { return dependencies.toArray(new ModDependency[0]); }
+
+		public static class ModDependency {
+			public final String modId;
+			public final VersionRange version;
+			public final boolean essential;
+
+			public ModDependency(JSONObject json) throws JSONException, MalformedModVersionFormatException {
+				modId = json.getString("modId");
+				version = VersionRange.createFromVersionSpec(json.getString("version"));
+				essential = json.optBoolean("essential", true);
+			}
 		}
 	}
 }
