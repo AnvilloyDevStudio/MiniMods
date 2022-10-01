@@ -1,12 +1,11 @@
 package io.github.anvilloystudio.minimods.api;
 
-import minicraft.gfx.Screen;
-import minicraft.gfx.Sprite;
-import minicraft.gfx.SpriteSheet;
-
 import java.awt.Rectangle;
 
 import io.github.anvilloystudio.minimods.api.mixins.SpritePxMixin;
+import minicraft.gfx.Screen;
+import minicraft.gfx.Sprite;
+import minicraft.gfx.SpriteSheet;
 
 public class GraphicComp {
 	public static class ModSprite extends Sprite {

@@ -1,0 +1,11 @@
+--- a\minicraft\entity\mob\Player.java	2021-09-08 21:34:58.000000000 +0800
++++ b\minicraft\entity\mob\Player.java	2022-09-13 19:24:42.882498600 +0800
+@@ -614,7 +614,7 @@
+ 				if (tool.type == ToolType.Bow && tool.dur > 0 && inventory.count(Items.arrowItem) > 0) {
+ 					
+ 					if (!Game.isMode("creative")) inventory.removeItem(Items.arrowItem);
+-					level.add(new Arrow(this, attackDir, tool.level));
++					level.add(new Arrow(this, attackDir, ToolItem.LEVELS.get(tool.level)));
+ 					attackTime = 10;
+ 					
+ 					if (!Game.isMode("creative")) tool.dur--;

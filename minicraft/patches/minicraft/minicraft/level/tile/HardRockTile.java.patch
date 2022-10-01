@@ -1,0 +1,15 @@
+--- a\minicraft\level\tile\HardRockTile.java	2021-09-08 21:34:58.000000000 +0800
++++ b\minicraft\level\tile\HardRockTile.java	2022-09-13 19:29:06.198596400 +0800
+@@ -40,9 +40,9 @@
+ 			return false; // Go directly to hurt method
+ 		if (item instanceof ToolItem) {
+ 			ToolItem tool = (ToolItem) item;
+-			if (tool.type == ToolType.Pickaxe && tool.level == 4) {
+-				if (player.payStamina(4 - tool.level) && tool.payDurability()) {
+-					hurt(level, xt, yt, random.nextInt(10) + (tool.level) * 5 + 10);
++			if (tool.type == ToolType.Pickaxe && ToolItem.LEVELS.get(tool.level) == 4) {
++				if (player.payStamina(4 - ToolItem.LEVELS.get(tool.level)) && tool.payDurability()) {
++					hurt(level, xt, yt, random.nextInt(10) + (ToolItem.LEVELS.get(tool.level)) * 5 + 10);
+ 					return true;
+ 				}
+ 			} else {

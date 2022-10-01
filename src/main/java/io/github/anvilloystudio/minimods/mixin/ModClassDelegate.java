@@ -197,7 +197,7 @@ final public class ModClassDelegate {
 						if (url == null) { // no .class file
 							try {
 								c = PLATFORM_CLASS_LOADER.loadClass(name);
-								Logger.info("loaded resources-less class {} from platform class loader");
+								Logger.info("loaded resources-less class {} from platform class loader", c);
 							} catch (ClassNotFoundException e) {
 								Logger.warn("can't find class {}", name);
 								throw e;
@@ -207,7 +207,7 @@ final public class ModClassDelegate {
 							// loaded by setting validParentUrls and not including "url". Typical causes are:
 							// - accessing classes too early (game libs shouldn't be used until Loader is ready)
 							// - using jars that are only transient (deobfuscation input or pass-through installers)
-							String msg = String.format("can't load class {} at {} as it hasn't been exposed to the game",
+							String msg = String.format("can't load class %s at %s as it hasn't been exposed to the game",
 									name, getCodeSource(url, fileName));
 							Logger.warn(msg);
 							throw new ClassNotFoundException(msg);

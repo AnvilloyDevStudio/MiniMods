@@ -1,0 +1,13 @@
+--- a\minicraft\level\tile\WallTile.java	2021-09-08 21:34:58.000000000 +0800
++++ b\minicraft\level\tile\WallTile.java	2022-09-13 19:33:11.926605800 +0800
+@@ -56,8 +56,8 @@
+ 			ToolItem tool = (ToolItem) item;
+ 			if (tool.type == type.getRequiredTool()) {
+ 				if (level.depth != -3 || type != Material.Obsidian || AirWizard.beaten) {
+-					if (player.payStamina(4 - tool.level) && tool.payDurability()) {
+-						hurt(level, xt, yt, random.nextInt(10) + (tool.level) * 5 + 10);
++					if (player.payStamina(4 - ToolItem.LEVELS.get(tool.level)) && tool.payDurability()) {
++						hurt(level, xt, yt, random.nextInt(10) + (ToolItem.LEVELS.get(tool.level)) * 5 + 10);
+ 						return true;
+ 					}
+ 				} else {

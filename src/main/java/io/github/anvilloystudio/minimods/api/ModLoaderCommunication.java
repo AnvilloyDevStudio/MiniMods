@@ -2,6 +2,7 @@ package io.github.anvilloystudio.minimods.api;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import io.github.anvilloystudio.minimods.core.ModContainer;
@@ -193,5 +194,27 @@ public class ModLoaderCommunication {
 			throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 				NoSuchMethodException, SecurityException, ClassNotFoundException {
 		return PARENT.loadClass(className).getConstructor(paramTypes).newInstance(initargs);
+	}
+
+	/**
+	 * Creating a new instance with the specified class and params.
+	 * @param className The binary name of the class.
+	 * @param methodName The name of the method
+	 * @param paramTypes The parameter array.
+	 * @return A new object created by calling the constructor this object represents
+     * @throws NoSuchMethodException if a matching method is not found.
+	 * @throws  NullPointerException if {@code name} is {@code null}
+	 * @throws SecurityException
+     * 			If a security manager, <i>s</i>, is present and
+     * 			the caller's class loader is not the same as or an
+     * 			ancestor of the class loader for the current class and
+     * 			invocation of {@link SecurityManager#checkPackageAccess
+     * 			s.checkPackageAccess()} denies access to the package
+     * 			of this class.
+	 * @throws ClassNotFoundException If the class was not found.
+	 */
+	public static Method getMethod(String className, String methodName, Class<?>[] paramTypes)
+			throws SecurityException, ClassNotFoundException, NoSuchMethodException {
+		return PARENT.loadClass(className).getDeclaredMethod(methodName, paramTypes);
 	}
 }

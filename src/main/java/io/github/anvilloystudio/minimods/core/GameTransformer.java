@@ -152,12 +152,20 @@ public class GameTransformer {
 
 		ClassNode mainClass = readClass(getClassSource(Mods.entrypoint));
         ClassNode plusInitializer = readClass(getClassSource("minicraft.core.Initializer"));
-        MethodNode initMethod = findMethod(plusInitializer, (method) -> method.name.equals("run") && method.desc.equals("()V"));
+		MethodNode initMethod = findMethod(mainClass, (method) -> method.name.equals("main") && method.desc.equals("([Ljava/lang/String;)V"));
+        MethodNode postInitMethod = findMethod(plusInitializer, (method) -> method.name.equals("run") && method.desc.equals("()V"));
 
-        Logger.debug("Found init method: %s -> %s", Mods.entrypoint, plusInitializer == null ? mainClass.name : plusInitializer.name);
+		Logger.debug("Found init method: %s -> %s", Mods.entrypoint, mainClass.name);
         Logger.debug("Patching init method %s%s", initMethod.name, initMethod.desc);
 
-        ListIterator<AbstractInsnNode> it = initMethod.instructions.iterator();
+		ListIterator<AbstractInsnNode> it = initMethod.instructions.iterator();
+        it.add(new MethodInsnNode(Opcodes.INVOKESTATIC, ModHandler.class.getName().replace('.', '/'), "initPhaseMods", "()V", false));
+		addPatchedClass(mainClass);
+
+        Logger.debug("Found postInit method: %s -> %s", Mods.entrypoint, plusInitializer.name);
+        Logger.debug("Patching postInit method %s%s", postInitMethod.name, postInitMethod.desc);
+
+        it = postInitMethod.instructions.iterator();
         it.add(new MethodInsnNode(Opcodes.INVOKESTATIC, ModHandler.class.getName().replace('.', '/'), "initMods", "()V", false));
 		addPatchedClass(plusInitializer);
 	}

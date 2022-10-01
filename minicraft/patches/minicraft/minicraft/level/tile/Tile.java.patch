@@ -1,0 +1,11 @@
+--- a\minicraft\level\tile\Tile.java	2021-09-08 21:34:58.000000000 +0800
++++ b\minicraft\level\tile\Tile.java	2022-09-25 18:16:06.404729500 +0800
+@@ -21,7 +21,7 @@
+ 	/**
+ 	 * This is used by wall tiles to get what material they're made of.
+ 	 */
+-	protected enum Material {
++	public enum Material {
+ 		Wood(ToolType.Axe),
+ 		Stone(ToolType.Pickaxe),
+ 		Obsidian(ToolType.Pickaxe);

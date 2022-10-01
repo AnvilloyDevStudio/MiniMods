@@ -1,0 +1,11 @@
+--- a\minicraft\level\tile\farming\FarmTile.java	2021-09-08 21:34:58.000000000 +0800
++++ b\minicraft\level\tile\farming\FarmTile.java	2022-09-13 19:34:16.437546400 +0800
+@@ -28,7 +28,7 @@
+         if (item instanceof ToolItem) {
+             ToolItem tool = (ToolItem) item;
+             if (tool.type == ToolType.Shovel) {
+-                if (player.payStamina(4 - tool.level) && tool.payDurability()) {
++                if (player.payStamina(4 - ToolItem.LEVELS.get(tool.level)) && tool.payDurability()) {
+                     level.setTile(xt, yt, Tiles.get("Dirt"));
+                     Sound.monsterHurt.play();
+                     return true;

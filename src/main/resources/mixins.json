@@ -4,12 +4,17 @@
   "priority": 2147483647,
   "mixins": [
     "GameMixin",
+    "LevelGenMixin",
+    "MaterialMixin",
     "MenuMixin",
+    "OreTileMixin",
+    "OreTypeMixin",
     "RendererMixin",
-    "TitleDisplayMixin",
-    "UpdaterMixin",
     "SpritePxMixin",
-    "TileMixin"
+    "TileMixin",
+    "TitleDisplayMixin",
+    "ToolTypeMixin",
+    "UpdaterMixin"
   ],
   "injectors": {
     "defaultRequire": 1

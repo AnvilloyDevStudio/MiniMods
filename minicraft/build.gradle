@@ -1,5 +1,13 @@
-apply plugin: 'java'
-apply plugin: 'application'
+import groovy.io.FileType
+import org.gradle.api.file.FileCopyDetails
+import org.gradle.api.tasks.SourceSetOutput
+import org.apache.commons.io.FileUtils
+
+plugins {
+    id 'java'
+    id 'application'
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+}
 
 project.version = '2.0.7'
 
@@ -16,39 +24,52 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.jetbrains:annotations:21.0.1'
-    // implementation 'org.xbill:dns:2.0.8'
-    implementation 'commons-codec:commons-codec:1.15'
-    implementation 'commons-io:commons-io:2.4'
-    implementation 'commons-logging:commons-logging:1.2'
-    implementation 'dnsjava:dnsjava:3.4.1'
-    implementation 'org.apache.httpcomponents:httpasyncclient:4.1.4'
-    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
-    implementation 'org.apache.httpcomponents:httpcore:4.4.14'
-    implementation 'org.apache.httpcomponents:httpcore-nio:4.4.14'
-    implementation 'org.apache.httpcomponents:httpmime:4.5.13'
-    implementation 'org.json:json:20210307'
-    implementation 'org.slf4j:slf4j-api:1.7.32'
-    implementation 'com.mashape.unirest:unirest-java:1.4.9'
-    implementation 'org.apache.xmlgraphics:xmlgraphics-commons:2.6'
-    testImplementation 'org.hamcrest:hamcrest:2.2'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+    implementation project(path: ":minicraft-base:source", configuration: "shadow")
 }
+
 java {
     withSourcesJar()
 }
 
-buildscript {
-    repositories {
-        gradlePluginPortal()
-    }
-    dependencies {
-        classpath 'gradle.plugin.com.github.jengelman.gradle.plugins:shadow:7.0.0'
+sourceSets {
+    main {
+        java { // Getting all dirs.
+            def dir = file("patches/minicraft/")
+            def tmpDir = file("build/tmp/patches/")
+            def javaSrcDir = file("source/src/main/java/")
+            tmpDir.mkdirs()
+            FileUtils.cleanDirectory(tmpDir)
+            copy { // Copy all files
+                from javaSrcDir
+                into tmpDir
+            }
+
+            dir.eachFileRecurse (FileType.FILES) { file ->
+                def patcherDir = dir.toPath().relativize(file.toPath()).toString()
+
+                println "Executing patcher for " + file.getPath()
+                exec {
+                    workingDir buildDir
+                    executable 'patch'
+                    args "-l", "-p0", "--forward", "-i", file.getPath(), tmpDir.toPath().resolve(patcherDir.substring(0, patcherDir.length() - 6)).toFile().getPath()
+                }
+                // ant.patch(patchfile: file, originalfile: tmpDir.toPath().resolve(patcherDir.substring(0, patcherDir.length() - 6)).toFile(), ignorewhitespace: true)
+            }
+
+            srcDir tmpDir.getPath()
+        }
     }
 }
-apply plugin: 'com.github.johnrengelman.shadow'
 
-shadowJar {
+tasks.distZip.doFirst {
+    duplicatesStrategy = DuplicatesStrategy.WARN
+}
+
+tasks.distTar.doFirst {
+    duplicatesStrategy = DuplicatesStrategy.WARN
+}
+
+shadowJar { // Copying this part from source build.gradle.
     archivesBaseName = 'minicraft_plus'
     archiveClassifier.set('')
 
@@ -58,4 +79,27 @@ shadowJar {
                 'Implementation-Version': project.version,
                 'SplashScreen-Image': "Minicraft_Splash_Screen_3.png")
     }
+
+    // println project.configurations.source.singleFile
+
+    // // with copySpec { // Excluding files which are patched already.
+    // //     from zipTree(project.configurations.source.singleFile)
+    // //     eachFile { FileCopyDetails action ->
+    // //         String path = action.relativePath.pathString
+    // //         SourceSetOutput output = sourceSets.main.output
+
+    // //         println path
+
+    // //         // see if overridden by a class
+    // //         boolean patched = output.classesDirs.files.any { new File(it, path).exists() }
+    // //         if (!patched) {
+    // //             // see if overridden by a resource
+    // //             patched = new File(output.resourcesDir, path).exists()
+    // //         }
+    // //         if (patched) {
+    // //             logger.info "Using patched version of $path"
+    // //         }
+    // //             action.exclude()
+    // //     }
+    // // }
 }

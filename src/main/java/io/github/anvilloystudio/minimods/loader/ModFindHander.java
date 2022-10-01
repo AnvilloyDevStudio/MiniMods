@@ -89,11 +89,6 @@ public class ModFindHander {
 
             if (valid) break;
         }
-
-		ModLoadingHandler.secondaryPro.text = "Adding Paths";
-		for (ModContainer mod : Mods.mods) {
-			LoaderInitialization.addToClassPath(mod.jarPath);
-		}
 	}
 
 	private static File[] readModsFolder() {

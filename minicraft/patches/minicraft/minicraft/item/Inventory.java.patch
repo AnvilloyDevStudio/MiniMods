@@ -1,0 +1,11 @@
+--- a\minicraft\item\Inventory.java	2021-09-08 21:34:58.000000000 +0800
++++ b\minicraft\item\Inventory.java	2022-09-11 17:32:49.154932400 +0800
+@@ -218,7 +218,7 @@
+ 			tryAdd(chance, item, num, false);
+ 	}
+ 	public void tryAdd(int chance, @Nullable Item item) { tryAdd(chance, item, 1); }
+-	public void tryAdd(int chance, ToolType type, int lvl) {
++	public void tryAdd(int chance, ToolType type, String lvl) {
+ 		tryAdd(chance, new ToolItem(type, lvl));
+ 	}
+ 	

@@ -14,24 +14,6 @@ import io.github.anvilloystudio.minimods.api.ModProcedure;
 import io.github.anvilloystudio.minimods.api.Vector2;
 import io.github.anvilloystudio.minimods.coremods.mixins.InitializerMixin;
 import io.github.anvilloystudio.minimods.coremods.mixins.LevelMixin;
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Frame;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Map.Entry;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-import java.util.regex.Pattern;
-
 import minicraft.core.Action;
 import minicraft.core.Game;
 import minicraft.core.Initializer;
@@ -51,6 +33,23 @@ import minicraft.entity.mob.Player;
 import minicraft.entity.particle.Particle;
 import minicraft.saveload.Save;
 import minicraft.screen.WorldSelectDisplay;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Frame;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.regex.Pattern;
 
 public class CommandWindow {
 	private static JFrame frame;

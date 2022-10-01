@@ -22,7 +22,7 @@ repositories {
 
 dependencies {
     // Minicraft+ base code dependencies. Apply for every version.
-    implementation project(":minicraft-base")
+    implementation project(path: ":minicraft-base", configuration: "shadow")
     implementation 'org.jetbrains:annotations:21.0.1'
     implementation 'commons-codec:commons-codec:1.15'
     implementation 'commons-io:commons-io:2.4'
@@ -75,9 +75,8 @@ jar {
     def paths = [];
     configurations.runtimeClasspath.each { dir ->
         def des = "lib/"
-        if (dir.getName().startsWith("minicraft_plus")) {
-            des = ""
-        }
+        if (dir.getName().startsWith("minicraft_plus")) { des = "" }
+        if (dir.getName().startsWith("minicraft-base")) { return }
         paths.add(des + dir.getName())
         copy {
             from dir
@@ -99,38 +98,15 @@ jar {
     }
 }
 
-// shadowJar {
-//     archivesBaseName = "minimods-${minicraftVerison}"
-//     archiveClassifier.set('')
+shadowJar {
+    archivesBaseName = "minimods-${minicraftVerison}"
 
-//     dependencies {
-//         // Exclude all minicraft base dependencies as they are included in the game jar.
-//         exclude(project(':minicraft-base'))
-//         exclude(dependency('org.jetbrains:annotations:21.0.1'))
-//         exclude(dependency('commons-codec:commons-codec:1.15'))
-//         exclude(dependency('commons-io:commons-io:2.4'))
-//         exclude(dependency('commons-logging:commons-logging:1.2'))
-//         exclude(dependency('dnsjava:dnsjava:3.4.1'))
-//         exclude(dependency('org.apache.httpcomponents:httpasyncclient:4.1.4'))
-//         exclude(dependency('org.apache.httpcomponents:httpclient:4.5.13'))
-//         exclude(dependency('org.apache.httpcomponents:httpcore:4.4.14'))
-//         exclude(dependency('org.apache.httpcomponents:httpcore-nio:4.4.14'))
-//         exclude(dependency('org.apache.httpcomponents:httpmime:4.5.13'))
-//         exclude(dependency('org.json:json:20210307'))
-//         exclude(dependency('org.slf4j:slf4j-api:1.7.32'))
-//         exclude(dependency('com.mashape.unirest:unirest-java:1.4.9'))
-//         exclude(dependency('org.apache.xmlgraphics:xmlgraphics-commons:2.6'))
-//         exclude(dependency('org.hamcrest:hamcrest:2.2'))
-//         exclude(dependency('org.junit.jupiter:junit-jupiter-api:5.7.2'))
-//     }
-
-//     manifest {
-//         attributes(
-//                 'Main-Class': mainClassName,
-//                 'Implementation-Title': project.name,
-//                 'Implementation-Version': project.version,
-//                 'SplashScreen-Image': "Minicraft_Splash_Screen_3.png",
-//                 'Class-Path': "minicraft_plus-${minicraftVerison}.jar" // Specifying the game jar.
-//                 )
-//     }
-// }
+    manifest {
+        attributes(
+                'Main-Class': mainClassName,
+                'Implementation-Title': project.name,
+                'Implementation-Version': project.version,
+                'SplashScreen-Image': "Minicraft_Splash_Screen_3.png",
+            )
+    }
+}

@@ -7,6 +7,7 @@ import java.io.StringWriter;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.jar.Manifest;
 
@@ -85,6 +86,49 @@ public class LoaderInitialization {
 		ClassLoader cl = classLoader.getClassLoader();
 		Thread.currentThread().setContextClassLoader(cl);
 
+		// Adding code sources.
+		Path cwd = Paths.get("").toAbsolutePath();
+		classLoader.setValidParentClassPath(Arrays.asList( // TODO updating this each time.
+			cwd.resolve("minimods-2.0.7-0.4.0.jar"),
+			cwd.resolve("minicraft_plus-2.0.7.jar"),
+
+			cwd.resolve("lib/animal-sniffer-annotations-1.18.jar"),
+			cwd.resolve("lib/annotations-21.0.1.jar"),
+			cwd.resolve("lib/asm-9.3.jar"),
+			cwd.resolve("lib/asm-analysis-9.3.jar"),
+			cwd.resolve("lib/asm-commons-9.3.jar"),
+			cwd.resolve("lib/asm-tree-9.3.jar"),
+			cwd.resolve("lib/asm-util-9.3.jar"),
+			cwd.resolve("lib/checker-qual-3.12.0.jar"),
+			cwd.resolve("lib/commons-codec-1.15.jar"),
+			cwd.resolve("lib/commons-io-2.4.jar"),
+			cwd.resolve("lib/commons-logging-1.2.jar"),
+			cwd.resolve("lib/dnsjava-3.4.1.jar"),
+			cwd.resolve("lib/error_prone_annotations-2.11.0.jar"),
+			cwd.resolve("lib/failureaccess-1.0.1.jar"),
+			cwd.resolve("lib/gson-2.9.0.jar"),
+			cwd.resolve("lib/guava-31.1-jre.jar"),
+			cwd.resolve("lib/httpasyncclient-4.1.5.jar"),
+			cwd.resolve("lib/httpclient-4.5.13.jar"),
+			cwd.resolve("lib/httpcore-4.4.15.jar"),
+			cwd.resolve("lib/httpcore-nio-4.4.15.jar"),
+			cwd.resolve("lib/httpmime-4.5.13.jar"),
+			cwd.resolve("lib/j2objc-annotations-1.3.jar"),
+			cwd.resolve("lib/jna-5.12.1.jar"),
+			cwd.resolve("lib/jna-platform-5.12.1.jar"),
+			cwd.resolve("lib/json-20211205.jar"),
+			cwd.resolve("lib/jsr305-3.0.2.jar"),
+			cwd.resolve("lib/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar"),
+			cwd.resolve("lib/mixin-0.8.5.jar"),
+			cwd.resolve("lib/oshi-core-6.2.2.jar"),
+			cwd.resolve("lib/slf4j-api-1.7.36.jar"),
+			cwd.resolve("lib/tinylog-api-2.4.1.jar"),
+			cwd.resolve("lib/tinylog-impl-2.4.1.jar"),
+			cwd.resolve("lib/unirest-java-1.4.9.jar"),
+			cwd.resolve("lib/unirest-java-3.13.7.jar"),
+			cwd.resolve("lib/xmlgraphics-commons-2.6.jar")
+		));
+
 		ModLoadingHandler.secondaryPro.cur = 1;
 		ModLoadingHandler.secondaryPro.text = "Applying Loader Injection";
 		GameTransformer.transform();
@@ -118,7 +162,7 @@ public class LoaderInitialization {
 		ModLoadingHandler.overallPro.cur = 5;
 		ModLoadingHandler.overallPro.text = "Phase 2: Init";
 		ModLoadingHandler.secondaryPro = null;
-		ModHandler.initPhaseMods();
+		// ModHandler.initPhaseMods(); Imagine that.
 		ModMixinBootstrap.goPhaseDefault();
 	}
 

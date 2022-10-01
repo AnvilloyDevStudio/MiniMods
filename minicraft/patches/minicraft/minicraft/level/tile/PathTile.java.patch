@@ -1,0 +1,11 @@
+--- a\minicraft\level\tile\PathTile.java	2021-09-08 21:34:58.000000000 +0800
++++ b\minicraft\level\tile\PathTile.java	2022-09-13 19:30:34.973401300 +0800
+@@ -23,7 +23,7 @@
+         if (item instanceof ToolItem) {
+             ToolItem tool = (ToolItem) item;
+             if (tool.type == ToolType.Shovel) {
+-                if (player.payStamina(4 - tool.level) && tool.payDurability()) {
++                if (player.payStamina(4 - ToolItem.LEVELS.get(tool.level)) && tool.payDurability()) {
+                     level.setTile(xt, yt, Tiles.get("Hole"));
+                     Sound.monsterHurt.play();
+                     level.dropItem(xt * 16 + 8, yt * 16 + 8, Items.get("Dirt"));

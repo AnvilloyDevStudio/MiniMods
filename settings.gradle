@@ -12,6 +12,9 @@ rootProject.name = 'MiniMods'
 include "minicraft-base"
 project(":minicraft-base").projectDir = file("minicraft")
 
+include "minicraft-base:source"
+project(":minicraft-base:source").projectDir = file("minicraft/source")
+
 file('mods').eachDir { dir ->
   include "mod-${dir.name}"
   project(":mod-${dir.name}").projectDir = dir

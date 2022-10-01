@@ -1,0 +1,11 @@
+--- a\minicraft\level\tile\OreTile.java	2021-09-08 21:34:58.000000000 +0800
++++ b\minicraft\level\tile\OreTile.java	2022-09-13 19:30:00.099613700 +0800
+@@ -67,7 +67,7 @@
+ 		if (item instanceof ToolItem) {
+ 			ToolItem tool = (ToolItem) item;
+ 			if (tool.type == ToolType.Pickaxe) {
+-				if (player.payStamina(6 - tool.level) && tool.payDurability()) {
++				if (player.payStamina(6 - ToolItem.LEVELS.get(tool.level)) && tool.payDurability()) {
+ 					hurt(level, xt, yt, 1);
+ 					return true;
+ 				}

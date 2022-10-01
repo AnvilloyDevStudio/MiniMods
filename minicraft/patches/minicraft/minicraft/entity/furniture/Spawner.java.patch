@@ -1,0 +1,11 @@
+--- a\minicraft\entity\furniture\Spawner.java	2021-09-08 21:34:58.000000000 +0800
++++ b\minicraft\entity\furniture\Spawner.java	2022-09-13 19:23:51.044792100 +0800
+@@ -157,7 +157,7 @@
+ 			if (Game.isMode("creative"))
+ 				dmg = health;
+ 			else {
+-				dmg = tool.level + random.nextInt(2);
++				dmg = ToolItem.LEVELS.get(tool.level) + random.nextInt(2);
+ 				
+ 				if (tool.type == ToolType.Pickaxe)
+ 					dmg += random.nextInt(5) + 2;

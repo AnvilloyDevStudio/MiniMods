@@ -1,0 +1,11 @@
+--- a\minicraft\level\tile\FlowerTile.java	2021-09-08 21:34:58.000000000 +0800
++++ b\minicraft\level\tile\FlowerTile.java	2022-09-13 19:28:05.666107600 +0800
+@@ -55,7 +55,7 @@
+ 		if (item instanceof ToolItem) {
+ 			ToolItem tool = (ToolItem) item;
+ 			if (tool.type == ToolType.Shovel) {
+-				if (player.payStamina(2 - tool.level) && tool.payDurability()) {
++				if (player.payStamina(2 - ToolItem.LEVELS.get(tool.level)) && tool.payDurability()) {
+ 					level.setTile(x, y, Tiles.get("Grass"));
+ 					Sound.monsterHurt.play();
+ 					level.dropItem(x * 16 + 8, y * 16 + 8, Items.get("Flower"));

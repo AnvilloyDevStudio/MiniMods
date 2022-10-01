@@ -1,0 +1,11 @@
+--- a\minicraft\level\tile\LavaBrickTile.java	2021-09-08 21:34:58.000000000 +0800
++++ b\minicraft\level\tile\LavaBrickTile.java	2022-09-13 19:29:30.107600400 +0800
+@@ -22,7 +22,7 @@
+ 		if (item instanceof ToolItem) {
+ 			ToolItem tool = (ToolItem) item;
+ 			if (tool.type == ToolType.Pickaxe) {
+-				if (player.payStamina(4 - tool.level) && tool.payDurability()) {
++				if (player.payStamina(4 - ToolItem.LEVELS.get(tool.level)) && tool.payDurability()) {
+ 					level.setTile(xt, yt, Tiles.get("Lava"));
+ 					Sound.monsterHurt.play();
+ 					return true;
