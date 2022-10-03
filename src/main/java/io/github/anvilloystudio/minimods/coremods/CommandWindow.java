@@ -981,6 +981,7 @@ public class CommandWindow {
 			return this;
 		}
 		@Nullable
+		@SuppressWarnings("unused")
 		public String getExpected() { return expected; }
 	}
 

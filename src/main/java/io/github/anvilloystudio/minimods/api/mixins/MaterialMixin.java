@@ -30,7 +30,7 @@ public class MaterialMixin {
 		throw new AssertionError();
 	}
 
-	@Inject(method = "<clinit>", at = @At(value = "FIELD", opcode = Opcodes.PUTSTATIC, target = "Lminicraft/level/tile/Tile/Material;$VALUES:[Lminicraft/level/tile/Tile/Material;", shift = At.Shift.AFTER, remap = false), remap = false)
+	@Inject(method = "<clinit>", at = @At(value = "FIELD", opcode = Opcodes.PUTSTATIC, target = "Lminicraft/level/tile/Tile$Material;$VALUES:[Lminicraft/level/tile/Tile$Material;", shift = At.Shift.AFTER, remap = false), remap = false)
     private static void addVariants(CallbackInfo ci) {
         ArrayList<Material> variants = new ArrayList<>(Arrays.asList($VALUES));
         // This means our code will still work if other mods add more variants!

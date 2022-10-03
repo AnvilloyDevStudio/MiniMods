@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -21,8 +20,7 @@ import minicraft.level.tile.OreTile.OreType;
 
 /** Referring https://gist.github.com/LlamaLad7/0b553d5ae04e4eb44d3a1e8558be9151. */
 @Mixin(OreType.class)
-@Unique
-public abstract class OreTypeMixin {
+public class OreTypeMixin {
 	@Shadow(remap = false)
 	@Mutable
 	private static @Final OreType[] $VALUES;
@@ -32,7 +30,7 @@ public abstract class OreTypeMixin {
 		throw new AssertionError();
 	}
 
-	@Inject(method = "<clinit>", at = @At(value = "FIELD", opcode = Opcodes.PUTSTATIC, target = "Lminicraft/level/tile/OreTile/OreType;$VALUES:[Lminicraft/level/tile/OreTile/OreType;", shift = At.Shift.AFTER, remap = false), remap = false)
+	@Inject(method = "<clinit>", at = @At(value = "FIELD", opcode = Opcodes.PUTSTATIC, target = "Lminicraft/level/tile/OreTile$OreType;$VALUES:[Lminicraft/level/tile/OreTile$OreType;", shift = At.Shift.AFTER, remap = false), remap = false)
     private static void addVariants(CallbackInfo ci) {
         ArrayList<OreType> variants = new ArrayList<>(Arrays.asList($VALUES));
         // This means our code will still work if other mods add more variants!

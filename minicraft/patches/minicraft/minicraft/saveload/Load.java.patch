@@ -1,0 +1,19 @@
+--- a\minicraft\saveload\Load.java	2021-09-08 21:34:58.000000000 +0800
++++ b\minicraft\saveload\Load.java	2022-10-03 22:19:46.537612300 +0800
+@@ -690,15 +690,7 @@
+ 				return null;
+ 			}
+ 		} else {
+-			int mobLvl = 1;
+-			Class c = null;
+-			if (!Crafter.names.contains(entityName)) {
+-				try {
+-					c = Class.forName("minicraft.entity.mob." + entityName);
+-				} catch (ClassNotFoundException ignored) {}
+-			}
+-			
+-			newEntity = getEntity(entityName.substring(entityName.lastIndexOf(".")+1), mobLvl);
++			newEntity = getEntity(entityName.substring(entityName.lastIndexOf(".")+1), 1);
+ 		}
+ 
+ 		if (newEntity == null)

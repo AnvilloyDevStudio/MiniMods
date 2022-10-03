@@ -13,4 +13,9 @@ public class GameMixin {
 	private static void mainInitRun(CallbackInfo ci) {
 		System.out.println("GameMixin success check.");
 	}
+
+	@Inject(method = "lambda$main$0(Ljava/lang/Thread;Ljava/lang/Throwable;)V", at = @At(value = "TAIL", remap = false), remap = false)
+	private static void mainErrorHandlerLambdaTail(CallbackInfo ci) {
+		Game.quit();
+	}
 }
