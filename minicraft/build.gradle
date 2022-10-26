@@ -50,6 +50,26 @@ sourceSets {
                 println "Executing patcher for " + file.getPath()
                 exec {
                     workingDir buildDir
+                    // executable buildDir.toPath().resolve("../cmd-elevation.bat").toFile().getCanonicalPath()
+                    // args"-Command",
+                        // "\$pinfo = New-Object System.Diagnostics.ProcessStartInfo; " +
+                        // "\$pinfo.FileName = Get-Command -Name patch; " +
+                        // "\$pinfo.RedirectStandardError = \$true; " +
+                        // "\$pinfo.RedirectStandardOutput = \$true; " +
+                        // "\$pinfo.UseShellExecute = \$false; " +
+                        // "\$pinfo.CreateNoWindow = \$true; " +
+                        // "\$pinfo.Arguments = \'-l -p0 --forward -i \\\"${file.getPath()}\\\" \\\"${tmpDir.toPath().resolve(patcherDir.substring(0, patcherDir.length() - 6)).toFile().getPath()}\\\"\'; " +
+                        // "\$p = New-Object System.Diagnostics.Process; " +
+                        // "\$p.StartInfo = \$pinfo; " +
+                        // "\$p.Start() | Out-Null; " +
+                        // "\$p.WaitForExit(); " +
+                        // "\$stdout = \$p.StandardOutput.ReadToEnd(); " +
+                        // "\$stderr = \$p.StandardError.ReadToEnd(); " +
+                        // "Write-Host \"stdout: \$stdout\"; " +
+                        // "Write-Host \"stderr: \$stderr\"; " +
+                        // "Write-Host \"exit code: \" + \$p.ExitCode"
+                        // "Start-Process \'patch\' -ArgumentList  \'-l -p0 --forward -i \\\"${file.getPath()}\\\" \\\"${tmpDir.toPath().resolve(patcherDir.substring(0, patcherDir.length() - 6)).toFile().getPath()}\\\"\' -Verb runAs -Wait -RedirectStandardOutput \'${buildDir.toString()}\\tmp\\patches\\output.txt\'"
+                    // args "patch", "-l", "-p0", "--forward", "-i", file.getPath(), tmpDir.toPath().resolve(patcherDir.substring(0, patcherDir.length() - 6)).toFile().getPath()
                     executable 'patch'
                     args "-l", "-p0", "--forward", "-i", file.getPath(), tmpDir.toPath().resolve(patcherDir.substring(0, patcherDir.length() - 6)).toFile().getPath()
                 }

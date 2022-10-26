@@ -89,6 +89,11 @@ public class ModFindHander {
 
             if (valid) break;
         }
+
+		// Adding mods to the classpaths.
+		for (ModContainer mod : Mods.mods) {
+			LoaderInitialization.addToClassPath(mod.jarPath);
+		}
 	}
 
 	private static File[] readModsFolder() {

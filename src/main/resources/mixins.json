@@ -6,6 +6,7 @@
     "DoorTileMixin",
     "GameMixin",
     "InputHandlerMixin",
+    "LevelGenAccessorMixin",
     "LevelGenMixin",
     "MaterialMixin",
     "MenuMixin",
@@ -15,6 +16,7 @@
     "RendererMixin",
     "SpritePxMixin",
     "TileMixin",
+    "TilesMixin",
     "TitleDisplayMixin",
     "ToolTypeMixin",
     "UpdaterMixin"

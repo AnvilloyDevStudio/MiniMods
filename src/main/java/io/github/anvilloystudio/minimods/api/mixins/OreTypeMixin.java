@@ -35,7 +35,7 @@ public class OreTypeMixin {
         ArrayList<OreType> variants = new ArrayList<>(Arrays.asList($VALUES));
         // This means our code will still work if other mods add more variants!
 		for (OreTypeMixinEnumData data : OreTypeMixinEnumUtil.getData()) {
-			OreType toAdd = invokeInit(data.internalName, variants.get(variants.size() - 1).ordinal() + 1, data.drop, data.color);
+			OreType toAdd = invokeInit(data.internalName, variants.get(variants.size() - 1).ordinal() + 1, data.drop.get(), data.color);
 
 			variants.add(toAdd);
 		}

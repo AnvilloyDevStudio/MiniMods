@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import org.tinylog.Logger;
 
 import io.github.anvilloystudio.minimods.core.ModVersion.MalformedModVersionFormatException;
+import io.github.anvilloystudio.minimods.loader.LoaderInitialization;
 import io.github.anvilloystudio.minimods.loader.LoaderUtils;
 import io.github.anvilloystudio.minimods.loader.ModLoadingHandler.ModLoadingException;
 
@@ -27,10 +28,10 @@ public class ModContainer {
 	public final Path jarPath;
 
 	public ModContainer(JarFile jar, URLClassLoader child) {
-		try {
+		try (URLClassLoader gameMobLoader = new URLClassLoader(child.getURLs(), LoaderInitialization.getTargetClassLoader())) {
 			metadata = new ModMetadata(new JSONObject(new String(LoaderUtils.readStringFromInputStream(jar.getInputStream(jar.getEntry("mod.json"))))));
 			if (!metadata.entrypoint.isEmpty()) {
-				Class<?> clazz = Class.forName(metadata.entrypoint, false, child);
+				Class<?> clazz = Class.forName(metadata.entrypoint, false, gameMobLoader);
 				boolean valid = false;
 				try {
 					clazz.getDeclaredMethod("entry");
@@ -64,7 +65,7 @@ public class ModContainer {
 				preInitClass = null;
 
 			if (!metadata.initpoint.isEmpty()) {
-				Class<?> clazz = Class.forName(metadata.initpoint, false, child);
+				Class<?> clazz = Class.forName(metadata.initpoint, false, gameMobLoader);
 				boolean valid = false;
 				try {
 					clazz.getDeclaredMethod("init");

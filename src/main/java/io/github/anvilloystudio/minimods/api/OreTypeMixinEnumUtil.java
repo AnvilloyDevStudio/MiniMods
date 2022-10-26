@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.function.Supplier;
 
 import minicraft.item.Item;
 
@@ -12,10 +13,10 @@ public class OreTypeMixinEnumUtil {
 
 	public static class OreTypeMixinEnumData {
 		public final String internalName;
-		public final Item drop;
+		public final Supplier<Item> drop;
 		public final int color;
 
-		public OreTypeMixinEnumData(String internalName, Item drop, int color) {
+		public OreTypeMixinEnumData(String internalName, Supplier<Item> drop, int color) {
 			this.internalName = internalName;
 			this.drop = drop;
 			this.color = color;

@@ -1,0 +1,12 @@
+{
+  "id": "<MODID>",
+  "name": "Core",
+  "description": "This mod is the core mod (with MiniMods), which is a mod too.\nThis core mod is a mod that is developed with the Mod Loader.\nThis is used for debugging.",
+  "version": "<VERSION>",
+  "gameVersion": "2.0.7",
+  "loaderVersion": "0.4.0",
+  "author": "MiniMods",
+  "entryentry": "io.github.anvilloystudio.minimods.mod.core.<ENTRYPOINT>",
+  "initentry": "io.github.anvilloystudio.minimods.mod.core.<INITPOINT>",
+  "dependencies": []
+}

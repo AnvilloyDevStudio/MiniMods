@@ -28,7 +28,17 @@ public class ModHandler {
 			progressCur.set(overallProField.get(null), 6);
 			progressText.set(overallProField.get(null), "Phase 3: Post-Init");
 
-			ModContainer[] mods = ModLoaderCommunication.getModList().stream().filter(m -> m.entryClass != null).toArray(ModContainer[]::new);
+			Field modEntryClassField = ModLoaderCommunication.getField("io.github.anvilloystudio.minimods.core.ModContainer", "entryClass");
+			Field modMetadataField = ModLoaderCommunication.getField("io.github.anvilloystudio.minimods.core.ModContainer", "metadata");
+			Field modMetadataNameField = ModLoaderCommunication.getField("io.github.anvilloystudio.minimods.core.ModContainer$ModMetadata", "name");
+
+			Object[] mods = ModLoaderCommunication.getModList().stream().filter(m -> {
+				try {
+					return modEntryClassField.get(m) != null;
+				} catch (IllegalArgumentException | IllegalAccessException e1) {
+					throw new RuntimeException(e1);
+				}
+			}).toArray();
 			Object secondaryPro = ModLoaderCommunication.createInstance(
 				"io.github.anvilloystudio.minimods.loader.ModLoadingHandler$Progress", new Class<?>[] {int.class}, new Object[] {mods.length});
 			secondaryProField.set(null, secondaryPro);
@@ -36,10 +46,10 @@ public class ModHandler {
 			// Init coremods.
 			progressText.set(secondaryPro, "MiniMods Coremods");
 			PostInitialization.entry();
-			for (ModContainer mod : mods) {
-				progressText.set(secondaryPro, mod.metadata.name);
-				if (mod.entryClass != null) try {
-					mod.entryClass.getDeclaredMethod("entry").invoke(null, new Object[0]);
+			for (Object mod : mods) {
+				progressText.set(secondaryPro, modMetadataNameField.get(modMetadataField.get(mod)));
+				if (modEntryClassField.get(mod) != null) try {
+					((Class<?>) modEntryClassField.get(mod)).getDeclaredMethod("entry").invoke(null, new Object[0]);
 				} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 					throw new RuntimeException(e);
 				}
@@ -93,7 +103,17 @@ public class ModHandler {
 			Field progressText = ModLoaderCommunication.getField("io.github.anvilloystudio.minimods.loader.ModLoadingHandler$Progress", "text");
 			Field progressCur = ModLoaderCommunication.getField("io.github.anvilloystudio.minimods.loader.ModLoadingHandler$Progress", "cur");
 
-			ModContainer[] mods = ModLoaderCommunication.getModList().stream().filter(m -> m.initClass != null).toArray(ModContainer[]::new);
+			Field modInitClassField = ModLoaderCommunication.getField("io.github.anvilloystudio.minimods.core.ModContainer", "initClass");
+			Field modMetadataField = ModLoaderCommunication.getField("io.github.anvilloystudio.minimods.core.ModContainer", "metadata");
+			Field modMetadataNameField = ModLoaderCommunication.getField("io.github.anvilloystudio.minimods.core.ModContainer$ModMetadata", "name");
+
+			Object[] mods = ModLoaderCommunication.getModList().stream().filter(m -> {
+				try {
+					return modInitClassField.get(m) != null;
+				} catch (IllegalArgumentException | IllegalAccessException e1) {
+					throw new RuntimeException(e1);
+				}
+			}).toArray();
 			Object secondaryPro = ModLoaderCommunication.createInstance(
 				"io.github.anvilloystudio.minimods.loader.ModLoadingHandler$Progress", new Class<?>[] {int.class}, new Object[] {mods.length});
 			secondaryProField.set(null, secondaryPro);
@@ -101,10 +121,10 @@ public class ModHandler {
 			// Init coremods.
 			progressText.set(secondaryPro, "MiniMods Coremods");
 			Initialization.init();
-			for (ModContainer mod : mods) {
-				progressText.set(secondaryPro, mod.metadata.name);
-				if (mod.entryClass != null) try {
-					mod.entryClass.getDeclaredMethod("init").invoke(null, new Object[0]);
+			for (Object mod : mods) {
+				progressText.set(secondaryPro, modMetadataNameField.get(modMetadataField.get(mod)));
+				if (modInitClassField.get(mod) != null) try {
+					((Class<?>) modInitClassField.get(mod)).getDeclaredMethod("init").invoke(null, new Object[0]);
 				} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
 					throw new RuntimeException(e);
 				}

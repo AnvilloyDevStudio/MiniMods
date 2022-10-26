@@ -5,8 +5,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-import io.github.anvilloystudio.minimods.core.ModContainer;
-
 public class ModLoaderCommunication {
 	/** The AppClassLoader of Game. */
 	private static final ClassLoader PARENT = ModLoaderCommunication.class.getClassLoader().getParent().getParent().getParent();
@@ -15,10 +13,9 @@ public class ModLoaderCommunication {
 	 * Getting the list of mods from the mod loader.
 	 * @return The lsit of mods.
 	 */
-	@SuppressWarnings("unchecked")
-	public static ArrayList<ModContainer> getModList() {
+	public static ArrayList<Object> getModList() {
 		try {
-			return new ArrayList<>((ArrayList<ModContainer>) PARENT.loadClass("io.github.anvilloystudio.minimods.core.Mods").getDeclaredField("mods").get(null));
+			return new ArrayList<>((ArrayList<?>) PARENT.loadClass("io.github.anvilloystudio.minimods.core.Mods").getDeclaredField("mods").get(null));
 		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException
 				| ClassNotFoundException e) {
 			e.printStackTrace();

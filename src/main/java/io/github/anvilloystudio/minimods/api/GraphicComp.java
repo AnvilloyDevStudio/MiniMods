@@ -1,6 +1,10 @@
 package io.github.anvilloystudio.minimods.api;
 
 import java.awt.Rectangle;
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.imageio.ImageIO;
 
 import io.github.anvilloystudio.minimods.api.mixins.SpritePxMixin;
 import minicraft.gfx.Screen;
@@ -152,6 +156,55 @@ public class GraphicComp {
 				this.spriteSheet = sheet;
 			}
 		}
+	}
+
+	/**
+	 * Forming a <code>SpriteSheet</code> from an {@code InputStream}.
+	 * @param is The {@code InputStream} of the image.
+	 * @return The {@code SpriteSheet}.
+	 * @throws IOException if an error occurs during reading or when not able to create required ImageInputStream.
+	 */
+	public static SpriteSheet getSpriteSheetFromInputStream(InputStream is) throws IOException {
+		return new SpriteSheet(ImageIO.read(is));
+	}
+
+	/**
+	 * Getting a {@code Sprite} from the {@code SpriteSheet}. With no mirroring and default initial position <i>(0, 0)</i>.
+	 * @param w The width.
+	 * @param h The height.
+	 * @param sheet The {@code SpriteSheet}.
+	 * @return The sprite.
+	 */
+	public static Sprite getSpriteFromSheet(int w, int h, SpriteSheet sheet) { return getSpriteFromSheet(0, 0, w, h, sheet); }
+	/**
+	 * Getting a {@code Sprite} from the {@code SpriteSheet}. With no mirroring.
+	 * @param x The initial x position.
+	 * @param y The initial y position.
+	 * @param w The width.
+	 * @param h The height.
+	 * @param sheet The {@code SpriteSheet}.
+	 * @return The sprite.
+	 */
+	public static Sprite getSpriteFromSheet(int x, int y, int w, int h, SpriteSheet sheet) { return getSpriteFromSheet(x, y, w, h, sheet, 0); }
+	/**
+	 * Getting a {@code Sprite} from the {@code SpriteSheet}.
+	 * @param x The initial x position.
+	 * @param y The initial y position.
+	 * @param w The width.
+	 * @param h The height.
+	 * @param sheet The {@code SpriteSheet}.
+	 * @param mirror The mirroring of the {@code Px}s.
+	 * @return The sprite.
+	 */
+	public static Sprite getSpriteFromSheet(int x, int y, int w, int h, SpriteSheet sheet, int mirror) {
+		Sprite.Px[][] pixels = new Sprite.Px[h][w];
+		for (int r = 0; r < h; r++) {
+			for (int c = 0; c < w; c++) {
+				pixels[r][c] = new Sprite.Px(x+c, y+r, mirror, sheet);
+			}
+		}
+
+		return new Sprite(pixels);
 	}
 
 	// The original rotated pixel rendering lowers the performance, so this will not be added.

@@ -1,0 +1,44 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+project.version = '0.1.0'
+
+sourceCompatibility = 8
+mainClassName = "io.github.anvilloystudio.minimods.mod.core.ores.Main"
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+repositories {
+    mavenCentral()
+
+    maven {
+        url "https://nexus.velocitypowered.com/repository/maven-public/"
+    }
+}
+
+dependencies {
+    implementation project(":")
+    // Use the following for local modding
+    // implementation files("minicraft_plus_mods-x.x.x-x.x.x.jar")
+    annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
+}
+
+buildscript {
+    repositories {
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath 'gradle.plugin.com.github.jengelman.gradle.plugins:shadow:7.0.0'
+    }
+}
+
+jar {
+    archivesBaseName = 'core-ores'
+    archiveClassifier.set('')
+
+    manifest {
+        attributes('Main-Class': mainClassName,
+                'Implementation-Title': project.name,
+                'Implementation-Version': project.version/*, NO USE CURRENTLY
+                'SplashScreen-Image': "Minicraft_Splash_Screen_3.png"*/)
+    }
+}

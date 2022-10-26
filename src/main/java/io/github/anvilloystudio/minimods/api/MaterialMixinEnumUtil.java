@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.function.Supplier;
 
 import minicraft.item.ToolType;
 
@@ -12,9 +13,9 @@ public class MaterialMixinEnumUtil {
 
 	public static class MaterialMixinEnumData {
 		public final String internalName;
-		public final ToolType requiredTool;
+		public final Supplier<ToolType> requiredTool;
 
-		public MaterialMixinEnumData(String internalName, ToolType requiredTool) {
+		public MaterialMixinEnumData(String internalName, Supplier<ToolType> requiredTool) {
 			this.internalName = internalName;
 			this.requiredTool = requiredTool;
 		}

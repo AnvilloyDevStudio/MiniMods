@@ -35,7 +35,7 @@ public class MaterialMixin {
         ArrayList<Material> variants = new ArrayList<>(Arrays.asList($VALUES));
         // This means our code will still work if other mods add more variants!
 		for (MaterialMixinEnumData data : MaterialMixinEnumUtil.getData()) {
-			Material toAdd = invokeInit(data.internalName, variants.get(variants.size() - 1).ordinal() + 1, data.requiredTool);
+			Material toAdd = invokeInit(data.internalName, variants.get(variants.size() - 1).ordinal() + 1, data.requiredTool.get());
 
 			variants.add(toAdd);
 		}
