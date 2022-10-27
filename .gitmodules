@@ -1,0 +1,3 @@
+[submodule "mod-core-ores"]
+	path = mods/core-ores
+	url = ../Mod-Core-Ores
