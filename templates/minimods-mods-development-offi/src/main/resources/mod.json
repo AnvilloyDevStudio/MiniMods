@@ -6,7 +6,7 @@
   "gameVersion": "2.0.7",
   "loaderVersion": "0.4.0",
   "author": "MiniMods",
-  "entryentry": "io.github.anvilloystudio.minimods.mod.core.<ENTRYPOINT>",
-  "initentry": "io.github.anvilloystudio.minimods.mod.core.<INITPOINT>",
+  "entrypoint": "io.github.anvilloystudio.minimods.mod.core.<ENTRYPOINT>",
+  "initpoint": "io.github.anvilloystudio.minimods.mod.core.<INITPOINT>",
   "dependencies": []
 }
