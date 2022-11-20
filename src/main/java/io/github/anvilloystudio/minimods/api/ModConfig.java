@@ -4,12 +4,14 @@ import io.github.anvilloystudio.minimods.loader.LoaderUtils;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * This class is used for mod configuration.
+ * There are 2 stages of configs:
+ * 	The loader stage - available only in pre-init stage.
+ * 	The game stage - available only after pre-init stage.
  */
 public class ModConfig extends JSONObject {
 	private static final HashMap<String, ModConfig> configs = new HashMap<>();
@@ -17,17 +19,6 @@ public class ModConfig extends JSONObject {
 	@Nullable
 	public static ModConfig getConfig(String modId) {
 		return configs.get(modId);
-	}
-
-	public static ModConfig getConfigFromLoader(String modId) {
-		try {
-			return (ModConfig) ModLoaderCommunication.getMethod(ModConfig.class.getSimpleName(), "getConfig", new Class<?>[] {String.class})
-				.invoke(null, modId);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException
-				| ClassNotFoundException | NoSuchMethodException e) {
-			e.printStackTrace();
-			return null;
-		}
 	}
 
 	private final JSONObject map = new JSONObject();

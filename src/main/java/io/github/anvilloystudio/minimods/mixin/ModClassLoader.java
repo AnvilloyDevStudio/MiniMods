@@ -49,12 +49,7 @@ public final class ModClassLoader extends SecureClassLoader implements ModClassD
 
 		URL url = urlLoader.getResource(name);
 
-		if (url == null || // When referring native MiniMods classes, use the original system loader instead.
-			(name.startsWith("io.github.anvilloystudio.minimods.api.") ||
-				name.startsWith("io.github.anvilloystudio.minimods.core.") ||
-				name.startsWith("io.github.anvilloystudio.minimods.coremods.") ||
-				name.startsWith("io.github.anvilloystudio.minimods.loader.") ||
-				name.startsWith("io.github.anvilloystudio.minimods.mixin.")) && name.endsWith(".class")) {
+		if (url == null) {
 			url = originalLoader.getResource(name);
 		}
 
@@ -74,12 +69,7 @@ public final class ModClassLoader extends SecureClassLoader implements ModClassD
 
 		InputStream inputStream = urlLoader.getResourceAsStream(name);
 
-		if (inputStream == null || // When referring native MiniMods classes, use the original system loader instead.
-			(name.startsWith("io.github.anvilloystudio.minimods.api.") ||
-				name.startsWith("io.github.anvilloystudio.minimods.core.") ||
-				name.startsWith("io.github.anvilloystudio.minimods.coremods.") ||
-				name.startsWith("io.github.anvilloystudio.minimods.loader.") ||
-				name.startsWith("io.github.anvilloystudio.minimods.mixin.")) && name.endsWith(".class")) {
+		if (inputStream == null) {
 			inputStream = originalLoader.getResourceAsStream(name);
 		}
 

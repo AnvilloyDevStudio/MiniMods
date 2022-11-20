@@ -183,21 +183,9 @@ final public class ModClassDelegate {
 				if (name.startsWith("java.")) { // fast path for java.** (can only be loaded by the platform CL anyway)
 					c = PLATFORM_CLASS_LOADER.loadClass(name);
 				} else {
-					if ((name.startsWith("io.github.anvilloystudio.minimods.api.") ||
-						name.startsWith("io.github.anvilloystudio.minimods.core.") ||
-						name.startsWith("io.github.anvilloystudio.minimods.coremods.") ||
-						name.startsWith("io.github.anvilloystudio.minimods.loader.") ||
-						name.startsWith("io.github.anvilloystudio.minimods.mixin.")) && !name.contains(".mixins."))
-						c = parentClassLoader.loadClass(name);
-					else
-						c = tryLoadClass(name, false); // try local load
+					c = tryLoadClass(name, false); // try local load
 
-					if (c == null && // When referring native MiniMods classes, use the original system loader instead.
-						!(name.startsWith("io.github.anvilloystudio.minimods.api.") ||
-							name.startsWith("io.github.anvilloystudio.minimods.core.") ||
-							name.startsWith("io.github.anvilloystudio.minimods.coremods.") ||
-							name.startsWith("io.github.anvilloystudio.minimods.loader.") ||
-							name.startsWith("io.github.anvilloystudio.minimods.mixin.")) && !name.contains(".mixins.")) { // not available locally, try system class loader
+					if (c == null) { // not available locally, try system class loader
 						String fileName = name.replace('.', '/').concat(".class");
 						URL url = parentClassLoader.getResource(fileName);
 

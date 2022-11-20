@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class ModLoaderCommunication {
 	/** The AppClassLoader of Game. */
-	private static final ClassLoader PARENT = ModLoaderCommunication.class.getClassLoader();
+	private static final ClassLoader PARENT = ModLoaderCommunication.class.getClassLoader().getParent().getParent().getParent();
 
 	/**
 	 * Getting the list of mods from the mod loader.
