@@ -1,5 +1,7 @@
 package io.github.anvilloystudio.minimods.mixin;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -47,7 +49,12 @@ public final class ModClassLoader extends SecureClassLoader implements ModClassD
 
 		URL url = urlLoader.getResource(name);
 
-		if (url == null) {
+		if (url == null || // When referring native MiniMods classes, use the original system loader instead.
+			(name.startsWith("io.github.anvilloystudio.minimods.api.") ||
+				name.startsWith("io.github.anvilloystudio.minimods.core.") ||
+				name.startsWith("io.github.anvilloystudio.minimods.coremods.") ||
+				name.startsWith("io.github.anvilloystudio.minimods.loader.") ||
+				name.startsWith("io.github.anvilloystudio.minimods.mixin.")) && name.endsWith(".class")) {
 			url = originalLoader.getResource(name);
 		}
 
@@ -55,7 +62,7 @@ public final class ModClassLoader extends SecureClassLoader implements ModClassD
 	}
 
 	@Override
-	public URL findResource(String name) {
+	public URL findResource(@NotNull String name) {
 		Objects.requireNonNull(name);
 
 		return urlLoader.findResource(name);
@@ -67,7 +74,12 @@ public final class ModClassLoader extends SecureClassLoader implements ModClassD
 
 		InputStream inputStream = urlLoader.getResourceAsStream(name);
 
-		if (inputStream == null) {
+		if (inputStream == null || // When referring native MiniMods classes, use the original system loader instead.
+			(name.startsWith("io.github.anvilloystudio.minimods.api.") ||
+				name.startsWith("io.github.anvilloystudio.minimods.core.") ||
+				name.startsWith("io.github.anvilloystudio.minimods.coremods.") ||
+				name.startsWith("io.github.anvilloystudio.minimods.loader.") ||
+				name.startsWith("io.github.anvilloystudio.minimods.mixin.")) && name.endsWith(".class")) {
 			inputStream = originalLoader.getResourceAsStream(name);
 		}
 

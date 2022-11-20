@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'java-library'
     id 'application'
     id "com.github.johnrengelman.shadow" version "7.1.2"
 }
@@ -22,43 +23,44 @@ repositories {
 
 dependencies {
     // Minicraft+ base code dependencies. Apply for every version.
-    implementation project(path: ":minicraft-base", configuration: "shadow")
-    implementation 'org.jetbrains:annotations:21.0.1'
-    implementation 'commons-codec:commons-codec:1.15'
-    implementation 'commons-io:commons-io:2.4'
-    implementation 'commons-logging:commons-logging:1.2'
-    implementation 'dnsjava:dnsjava:3.4.1'
-    implementation 'org.apache.httpcomponents:httpasyncclient:4.1.4'
-    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
-    implementation 'org.apache.httpcomponents:httpcore:4.4.14'
-    implementation 'org.apache.httpcomponents:httpcore-nio:4.4.14'
-    implementation 'org.apache.httpcomponents:httpmime:4.5.13'
-    implementation 'org.json:json:20210307'
-    implementation 'org.slf4j:slf4j-api:1.7.32'
-    implementation 'com.mashape.unirest:unirest-java:1.4.9'
-    implementation 'org.apache.xmlgraphics:xmlgraphics-commons:2.6'
+    api project(path: ":minicraft-base", configuration: "shadow")
+    api 'org.jetbrains:annotations:21.0.1'
+    // api 'org.xbill:dns:2.0.8'
+    api 'commons-codec:commons-codec:1.15'
+    api 'commons-io:commons-io:2.4'
+    api 'commons-logging:commons-logging:1.2'
+    api 'dnsjava:dnsjava:3.4.1'
+    api 'org.apache.httpcomponents:httpasyncclient:4.1.4'
+    api 'org.apache.httpcomponents:httpclient:4.5.13'
+    api 'org.apache.httpcomponents:httpcore:4.4.14'
+    api 'org.apache.httpcomponents:httpcore-nio:4.4.14'
+    api 'org.apache.httpcomponents:httpmime:4.5.13'
+    api 'org.json:json:20210307'
+    api 'org.slf4j:slf4j-api:1.7.32'
+    api 'com.mashape.unirest:unirest-java:1.4.9'
+    api 'org.apache.xmlgraphics:xmlgraphics-commons:2.6'
     testImplementation 'org.hamcrest:hamcrest:2.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
 
     // Future Minicraft+ version implementation.
-    implementation 'org.json:json:20211205'
-    implementation 'com.konghq:unirest-java:3.13.7'
-    implementation 'org.tinylog:tinylog-api:2.4.1'
-    implementation 'org.tinylog:tinylog-impl:2.4.1'
+    api 'org.json:json:20211205'
+    api 'com.konghq:unirest-java:3.13.7'
+    api 'org.tinylog:tinylog-api:2.4.1'
+    api 'org.tinylog:tinylog-impl:2.4.1'
 
     // Main Loader dependencies.
-    implementation "org.spongepowered:mixin:0.8.5"
+    api "org.spongepowered:mixin:0.8.5"
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
-    implementation "net.java.dev.jna:jna:5.12.1"
-    implementation "net.java.dev.jna:jna-platform:5.12.1"
-    implementation "com.github.oshi:oshi-core:6.2.2"
+    api "net.java.dev.jna:jna:5.12.1"
+    api "net.java.dev.jna:jna-platform:5.12.1"
+    api "com.github.oshi:oshi-core:6.2.2"
 
     // Dependencies of mixin.
-    implementation "org.ow2.asm:asm:9.3"
-    implementation "org.ow2.asm:asm-tree:9.3"
-    implementation "org.ow2.asm:asm-util:9.3"
-    implementation "org.ow2.asm:asm-commons:9.3"
-    implementation 'com.google.guava:guava:31.1-jre'
+    api "org.ow2.asm:asm:9.3"
+    api "org.ow2.asm:asm-tree:9.3"
+    api "org.ow2.asm:asm-util:9.3"
+    api "org.ow2.asm:asm-commons:9.3"
+    api 'com.google.guava:guava:31.1-jre'
 }
 
 java {

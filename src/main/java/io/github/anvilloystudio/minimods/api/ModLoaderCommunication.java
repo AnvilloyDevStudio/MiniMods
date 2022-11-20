@@ -7,11 +7,11 @@ import java.util.ArrayList;
 
 public class ModLoaderCommunication {
 	/** The AppClassLoader of Game. */
-	private static final ClassLoader PARENT = ModLoaderCommunication.class.getClassLoader().getParent().getParent().getParent();
+	private static final ClassLoader PARENT = ModLoaderCommunication.class.getClassLoader();
 
 	/**
 	 * Getting the list of mods from the mod loader.
-	 * @return The lsit of mods.
+	 * @return The list of mods.
 	 */
 	public static ArrayList<Object> getModList() {
 		try {

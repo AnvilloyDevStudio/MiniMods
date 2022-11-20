@@ -1,4 +1,5 @@
 apply plugin: 'java'
+apply plugin: 'java-library'
 apply plugin: 'application'
 
 project.version = '<VERSION>'
@@ -16,7 +17,7 @@ repositories {
 }
 
 dependencies {
-    implementation project(":")
+    api project(":")
     // Use the following for local modding
     // implementation files("minicraft_plus_mods-x.x.x-x.x.x.jar")
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"

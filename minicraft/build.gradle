@@ -1,10 +1,9 @@
 import groovy.io.FileType
-import org.gradle.api.file.FileCopyDetails
-import org.gradle.api.tasks.SourceSetOutput
 import org.apache.commons.io.FileUtils
 
 plugins {
     id 'java'
+    id 'java-library'
     id 'application'
     id "com.github.johnrengelman.shadow" version "7.1.2"
 }
@@ -24,7 +23,7 @@ repositories {
 }
 
 dependencies {
-    implementation project(path: ":minicraft-base:source", configuration: "shadow")
+    api project(path: ":minicraft-base:source", configuration: "shadow")
 }
 
 java {

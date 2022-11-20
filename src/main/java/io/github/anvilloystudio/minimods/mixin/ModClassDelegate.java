@@ -1,5 +1,11 @@
 package io.github.anvilloystudio.minimods.mixin;
 
+import io.github.anvilloystudio.minimods.core.GameTransformer;
+import io.github.anvilloystudio.minimods.core.Mods;
+import io.github.anvilloystudio.minimods.loader.LoaderInitialization;
+import org.spongepowered.asm.mixin.transformer.IMixinTransformer;
+import org.tinylog.Logger;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,21 +20,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.CodeSource;
 import java.security.cert.Certificate;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
-
-import org.spongepowered.asm.mixin.transformer.IMixinTransformer;
-import org.tinylog.Logger;
-
-import io.github.anvilloystudio.minimods.core.GameTransformer;
-import io.github.anvilloystudio.minimods.core.Mods;
-import io.github.anvilloystudio.minimods.loader.LoaderInitialization;
 
 final public class ModClassDelegate {
 	static final class Metadata {
@@ -188,9 +183,21 @@ final public class ModClassDelegate {
 				if (name.startsWith("java.")) { // fast path for java.** (can only be loaded by the platform CL anyway)
 					c = PLATFORM_CLASS_LOADER.loadClass(name);
 				} else {
-					c = tryLoadClass(name, false); // try local load
+					if ((name.startsWith("io.github.anvilloystudio.minimods.api.") ||
+						name.startsWith("io.github.anvilloystudio.minimods.core.") ||
+						name.startsWith("io.github.anvilloystudio.minimods.coremods.") ||
+						name.startsWith("io.github.anvilloystudio.minimods.loader.") ||
+						name.startsWith("io.github.anvilloystudio.minimods.mixin.")) && !name.contains(".mixins."))
+						c = parentClassLoader.loadClass(name);
+					else
+						c = tryLoadClass(name, false); // try local load
 
-					if (c == null) { // not available locally, try system class loader
+					if (c == null && // When referring native MiniMods classes, use the original system loader instead.
+						!(name.startsWith("io.github.anvilloystudio.minimods.api.") ||
+							name.startsWith("io.github.anvilloystudio.minimods.core.") ||
+							name.startsWith("io.github.anvilloystudio.minimods.coremods.") ||
+							name.startsWith("io.github.anvilloystudio.minimods.loader.") ||
+							name.startsWith("io.github.anvilloystudio.minimods.mixin.")) && !name.contains(".mixins.")) { // not available locally, try system class loader
 						String fileName = name.replace('.', '/').concat(".class");
 						URL url = parentClassLoader.getResource(fileName);
 

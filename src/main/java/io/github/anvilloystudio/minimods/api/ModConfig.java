@@ -1,24 +1,22 @@
 package io.github.anvilloystudio.minimods.api;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-
-import org.jetbrains.annotations.NotNull;
+import io.github.anvilloystudio.minimods.loader.LoaderUtils;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * This class is used for mod configuration.
+ */
 public class ModConfig extends JSONObject {
 	private static final HashMap<String, ModConfig> configs = new HashMap<>();
 
 	@Nullable
 	public static ModConfig getConfig(String modId) {
 		return configs.get(modId);
-	}
-
-	public static ModConfig getConfigOrCreate(String modId) {
-		ModConfig cfg = configs.get(modId);
-		if (cfg == null) cfg = configs.put(modId, new ModConfig());
-		return cfg;
 	}
 
 	public static ModConfig getConfigFromLoader(String modId) {
@@ -32,15 +30,14 @@ public class ModConfig extends JSONObject {
 		}
 	}
 
-	@NotNull
-	public static ModConfig getConfigOrCreateFromLoader(String modId) {
+	private final JSONObject map = new JSONObject();
+
+	public ModConfig() {
+		// TODO
 		try {
-			return (ModConfig) ModLoaderCommunication.getMethod(ModConfig.class.getSimpleName(), "getConfigOrCreate", new Class<?>[] {String.class})
-				.invoke(null, modId);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException
-				| ClassNotFoundException | NoSuchMethodException e) {
-			e.printStackTrace();
-			return null;
+			System.out.println(LoaderUtils.getCallerModId());
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -87,7 +84,7 @@ public class ModConfig extends JSONObject {
 			else if (lowerLimit instanceof Float) maxVal = Float.MAX_VALUE;
 			else if (lowerLimit instanceof Double) maxVal = Double.MAX_VALUE;
 			else throw new UnsupportedOperationException("Unsupported number type: " + lowerLimit.getClass().getSimpleName());
-			val = numberValueLimits.put(key, new Vector2<Number>(lowerLimit, maxVal));
+			val = numberValueLimits.put(key, new Vector2<>(lowerLimit, maxVal));
 		} else {
 			val.x = lowerLimit;
 		}
@@ -105,11 +102,29 @@ public class ModConfig extends JSONObject {
 			else if (upperLimit instanceof Float) minVal = Float.MIN_VALUE;
 			else if (upperLimit instanceof Double) minVal = Double.MIN_VALUE;
 			else throw new UnsupportedOperationException("Unsupported number type: " + upperLimit.getClass().getSimpleName());
-			val = numberValueLimits.put(key, new Vector2<Number>(minVal, upperLimit));
+			val = numberValueLimits.put(key, new Vector2<>(minVal, upperLimit));
 		} else {
 			val.y = upperLimit;
 		}
 
 		return val;
+	}
+
+	@Override
+	public String toString() {
+		return toString(4);
+	}
+
+	public String toString(int indentFactor) {
+		return map.toString(indentFactor);
+	}
+
+	public String toJSONC(int indentFactor) {
+		String json = map.toString(indentFactor);
+		for (Map.Entry<String, Vector2<Number>> e : numberValueLimits.entrySet()) {
+			json += String.format("\n// Key \"%s\"; Lower Limit: %s; Upper Limit: %s;", e.getKey(), e.getValue().x, e.getValue().y);
+		}
+
+		return json;
 	}
 }
