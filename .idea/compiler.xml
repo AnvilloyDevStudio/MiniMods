@@ -8,6 +8,7 @@
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/6d1c8bf4c28e697f472a83bd6add76ec4951734/mixin-0.8.5-processor.jar" />
         </processorPath>
         <module name="MiniMods.mod-debug-test.main" />
+        <module name="MiniMods.mod-core-redstone.main" />
         <module name="MiniMods.main" />
         <module name="MiniMods.mod-core-ores.main" />
       </profile>
