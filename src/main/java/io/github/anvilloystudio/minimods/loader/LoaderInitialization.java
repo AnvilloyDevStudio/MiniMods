@@ -1,5 +1,14 @@
 package io.github.anvilloystudio.minimods.loader;
 
+import io.github.anvilloystudio.minimods.core.GameTransformer;
+import io.github.anvilloystudio.minimods.core.Mods;
+import io.github.anvilloystudio.minimods.mixin.ModClassDelegate;
+import io.github.anvilloystudio.minimods.mixin.ModClassLoader;
+import io.github.anvilloystudio.minimods.mixin.ModMixinBootstrap;
+import org.tinylog.Logger;
+import org.tinylog.provider.ProviderRegistry;
+
+import javax.swing.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -10,19 +19,6 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.jar.Manifest;
-
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-
-import org.tinylog.Logger;
-import org.tinylog.provider.ProviderRegistry;
-
-import io.github.anvilloystudio.minimods.core.GameTransformer;
-import io.github.anvilloystudio.minimods.core.Mods;
-import io.github.anvilloystudio.minimods.mixin.ModClassDelegate;
-import io.github.anvilloystudio.minimods.mixin.ModClassLoader;
-import io.github.anvilloystudio.minimods.mixin.ModMixinBootstrap;
 
 public class LoaderInitialization {
 	private static ModClassDelegate classLoader;
@@ -141,6 +137,9 @@ public class LoaderInitialization {
 		ModLoadingHandler.overallPro.cur = 3;
 		ModLoadingHandler.overallPro.text = "Phase 1: PreInit";
 		ModLoadingHandler.secondaryPro = null;
+		// Load ALL loader stage ModConfig.
+
+		// PreInit Mods
 		ModHandler.preInitPhaseMods();
 
 		ModLoadingHandler.overallPro.cur = 4;

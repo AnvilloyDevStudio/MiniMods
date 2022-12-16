@@ -1,5 +1,14 @@
 package io.github.anvilloystudio.minimods.core;
 
+import io.github.anvilloystudio.minimods.core.ModVersion.MalformedModVersionFormatException;
+import io.github.anvilloystudio.minimods.loader.LoaderInitialization;
+import io.github.anvilloystudio.minimods.loader.LoaderUtils;
+import io.github.anvilloystudio.minimods.loader.ModLoadingHandler.ModLoadingException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.tinylog.Logger;
+
 import java.io.IOException;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
@@ -7,16 +16,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.tinylog.Logger;
-
-import io.github.anvilloystudio.minimods.core.ModVersion.MalformedModVersionFormatException;
-import io.github.anvilloystudio.minimods.loader.LoaderInitialization;
-import io.github.anvilloystudio.minimods.loader.LoaderUtils;
-import io.github.anvilloystudio.minimods.loader.ModLoadingHandler.ModLoadingException;
+import java.util.zip.ZipEntry;
 
 public class ModContainer {
 	public final Class<?> entryClass;
@@ -24,12 +24,13 @@ public class ModContainer {
 	public final Class<?> initClass;
 	public final Manifest manifest;
 	public final ModMetadata metadata;
+	public final ModSettings settings;
 	public final String mixinConfig;
 	public final Path jarPath;
 
 	public ModContainer(JarFile jar, URLClassLoader child) {
 		try (URLClassLoader gameMobLoader = new URLClassLoader(child.getURLs(), LoaderInitialization.getTargetClassLoader())) {
-			metadata = new ModMetadata(new JSONObject(new String(LoaderUtils.readStringFromInputStream(jar.getInputStream(jar.getEntry("mod.json"))))));
+			metadata = new ModMetadata(new JSONObject(LoaderUtils.readStringFromInputStream(jar.getInputStream(jar.getEntry("mod.json")))));
 			if (!metadata.entrypoint.isEmpty()) {
 				Class<?> clazz = Class.forName(metadata.entrypoint, false, gameMobLoader);
 				boolean valid = false;
@@ -80,6 +81,11 @@ public class ModContainer {
 				}
 			} else
 				initClass = null;
+
+			ZipEntry entry;
+			if ((entry = jar.getEntry("settings.json")) != null) {
+				settings = new ModSettings(new JSONObject(LoaderUtils.readStringFromInputStream(jar.getInputStream(entry))));
+			} else settings = new ModSettings(new JSONObject());
 
 			manifest = jar.getManifest();
 
@@ -150,6 +156,18 @@ public class ModContainer {
 				version = VersionRange.createFromVersionSpec(json.getString("version"));
 				essential = json.optBoolean("essential", true);
 			}
+		}
+	}
+
+	public static class ModSettings {
+		/** Whether to reset default value when the value is out of set bounds in config. */
+		public final boolean configValueResetDefaultIfOutOfScope;
+		/** Whether to reset default value when the value is not matched with the type of bounds or default value or missing in config. */
+		public final boolean configNumericLimitIgnoreOtherTypedValue;
+
+		private ModSettings(JSONObject json) {
+			configValueResetDefaultIfOutOfScope = json.optBoolean("configValueResetDefaultIfOutOfScope", true);
+			configNumericLimitIgnoreOtherTypedValue = json.optBoolean("configNumericLimitIgnoreOtherTypedValue", false);
 		}
 	}
 }

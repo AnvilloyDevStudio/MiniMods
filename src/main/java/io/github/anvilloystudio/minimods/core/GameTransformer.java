@@ -1,17 +1,7 @@
 package io.github.anvilloystudio.minimods.core;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UncheckedIOException;
-import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.function.Predicate;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.stream.Collectors;
-
+import io.github.anvilloystudio.minimods.loader.ModHandler;
+import minicraft.core.Game;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -22,9 +12,16 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.tinylog.Logger;
 
-import io.github.anvilloystudio.minimods.loader.ModHandler;
-import io.github.anvilloystudio.minimods.mixin.ModClassDelegate;
-import minicraft.core.Game;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.function.Predicate;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 public class GameTransformer {
@@ -139,7 +136,7 @@ public class GameTransformer {
 			try (InputStream is = jar.getInputStream(entry)) {
 				return new ClassReader(is);
 			} catch (IOException e) {
-				throw new RuntimeException(String.format("error reading %s in %s: %s", name, entry.getName(), e), e);
+				throw new RuntimeException(String.format("error reading {} in {}: {}", name, entry.getName(), e), e);
 			}
 		} catch (IOException | URISyntaxException e) {
 			throw new RuntimeException(e);
@@ -155,15 +152,15 @@ public class GameTransformer {
 		MethodNode initMethod = findMethod(mainClass, (method) -> method.name.equals("main") && method.desc.equals("([Ljava/lang/String;)V"));
         MethodNode postInitMethod = findMethod(plusInitializer, (method) -> method.name.equals("run") && method.desc.equals("()V"));
 
-		Logger.debug("Found init method: %s -> %s", Mods.entrypoint, mainClass.name);
-        Logger.debug("Patching init method %s%s", initMethod.name, initMethod.desc);
+		Logger.debug("Found init method: {} -> {}", Mods.entrypoint, mainClass.name);
+        Logger.debug("Patching init method {}{}", initMethod.name, initMethod.desc);
 
 		ListIterator<AbstractInsnNode> it = initMethod.instructions.iterator();
         it.add(new MethodInsnNode(Opcodes.INVOKESTATIC, ModHandler.class.getName().replace('.', '/'), "initPhaseMods", "()V", false));
 		addPatchedClass(mainClass);
 
-        Logger.debug("Found postInit method: %s -> %s", Mods.entrypoint, plusInitializer.name);
-        Logger.debug("Patching postInit method %s%s", postInitMethod.name, postInitMethod.desc);
+        Logger.debug("Found postInit method: {} -> {}", Mods.entrypoint, plusInitializer.name);
+        Logger.debug("Patching postInit method {}{}", postInitMethod.name, postInitMethod.desc);
 
         it = postInitMethod.instructions.iterator();
         it.add(new MethodInsnNode(Opcodes.INVOKESTATIC, ModHandler.class.getName().replace('.', '/'), "initMods", "()V", false));

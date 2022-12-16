@@ -1,0 +1,13 @@
+{
+  "id": "debug-test",
+  "name": "MiniMods Testing Debugger",
+  "description": "This is used for internal debugging.",
+  "version": "0.0.1",
+  "gameVersion": "2.0.7",
+  "loaderVersion": "0.4.0",
+  "author": "MiniMods",
+  "entrypoint": "io.github.anvilloystudio.minimods.mod.core.DebugTest",
+  "initpoint": "io.github.anvilloystudio.minimods.mod.core.DebugTest",
+  "preInitpoint": "io.github.anvilloystudio.minimods.mod.core.DebugTest",
+  "dependencies": []
+}

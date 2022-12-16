@@ -1,20 +1,19 @@
 package io.github.anvilloystudio.minimods.core;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-
+import com.sun.jna.Function;
+import com.sun.jna.platform.win32.WinDef.BOOL;
+import com.sun.jna.platform.win32.WinDef.DWORD;
+import com.sun.jna.platform.win32.WinDef.DWORDByReference;
+import com.sun.jna.platform.win32.WinNT.HANDLE;
 import io.github.anvilloystudio.minimods.loader.LoaderInitialization;
 import io.github.anvilloystudio.minimods.loader.ModLoadingHandler;
 import io.github.anvilloystudio.minimods.loader.ModLoadingHandler.ModLoadingException;
 import minicraft.core.Game;
 import minicraft.saveload.Version;
 
-import com.sun.jna.Function;
-import com.sun.jna.platform.win32.WinDef.BOOL;
-import com.sun.jna.platform.win32.WinDef.DWORD;
-import com.sun.jna.platform.win32.WinDef.DWORDByReference;
-import com.sun.jna.platform.win32.WinNT.HANDLE;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 public class Mods {
 	public static final ArrayList<ModContainer> mods = new ArrayList<>();
@@ -98,9 +97,9 @@ public class Mods {
 		ModContainer.ModMetadata meta = mod.metadata;
 		if (!meta.gameVersion.containsVersion(COMPAT_GAME_VERSION))
 			throw new ModLoadingException(String.format("Incompatible mod: %s: compatible game version %s; current: %s",
-				meta.modId, meta.gameVersion.toString(), Game.VERSION));
+				meta.modId, meta.gameVersion, Game.VERSION));
 		if (!meta.loaderVersion.containsVersion(COMPAT_LOADER_VERSION))
 			throw new ModLoadingException(String.format("Incompatible mod: %s: compatible loader version %s; current: %s",
-				meta.modId, meta.loaderVersion.toString(), VERSION));
+				meta.modId, meta.loaderVersion, VERSION));
 	}
 }

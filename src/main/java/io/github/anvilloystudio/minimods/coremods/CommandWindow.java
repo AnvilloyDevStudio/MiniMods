@@ -1,14 +1,5 @@
 package io.github.anvilloystudio.minimods.coremods;
 
-import javax.annotation.Nullable;
-import javax.swing.JFrame;
-import javax.swing.JTextField;
-import javax.swing.WindowConstants;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-
-import org.jetbrains.annotations.NotNull;
-
 import io.github.anvilloystudio.minimods.api.ConsoleColors;
 import io.github.anvilloystudio.minimods.api.ModProcedure;
 import io.github.anvilloystudio.minimods.api.Vector2;
@@ -33,7 +24,14 @@ import minicraft.entity.mob.Player;
 import minicraft.entity.particle.Particle;
 import minicraft.saveload.Save;
 import minicraft.screen.WorldSelectDisplay;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
+import javax.swing.JFrame;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -44,19 +42,20 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.Stack;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 public class CommandWindow {
-	private static JFrame frame;
-	private static JTextField input;
+	private static final JFrame frame;
+	private static final JTextField input;
 
 	/** The default number of columns. */
-	private static int defaultWidth = 15;
+	private static final int defaultWidth = 15;
 
 	private static final HashMap<String, String> validators = new HashMap<>();
 
@@ -537,7 +536,7 @@ public class CommandWindow {
 			ArrayList<String> out = new ArrayList<>();
 			int lastIdx = 0;
 			// 0 <>; 1 []; 2 ()
-			ArrayList<Integer> bracketCounter = new ArrayList<>();
+			Stack<Integer> bracketCounter = new Stack<>();
 			char openBracket0 = '<';
 			char openBracket1 = '[';
 			char openBracket2 = '(';
@@ -547,12 +546,12 @@ public class CommandWindow {
 			char spaceChar = ' ';
 			Supplier<Boolean> level0Checker = () -> {
 				if (bracketCounter.isEmpty()) return false;
-				return bracketCounter.get(bracketCounter.size() - 1) == 0;
+				return bracketCounter.peek() == 0;
 			};
 
 			Predicate<Integer> checkDiff = ch -> {
 				if (bracketCounter.isEmpty()) return true;
-				return bracketCounter.get(bracketCounter.size() - 1) != ch;
+				return !bracketCounter.peek().equals(ch);
 			};
 
 			for (int i = 0; i < input.length(); i++) {
@@ -563,22 +562,22 @@ public class CommandWindow {
 					if (!str.isEmpty()) out.add(str);
 				} else if (ch == openBracket0) {
 					if (level0Checker.get()) throw new RuntimeException(String.format("Invalid char %s index %s in <> level. Input: \"%s\"", ch, i, input));
-					bracketCounter.add(0);
+					bracketCounter.push(0);
 				} else if (ch == closeBracket0) {
 					if (checkDiff.test(0)) throw new RuntimeException(String.format("Invalid closing char %s index %s. Input: \"%s\"", ch, i, input));
-					bracketCounter.remove(bracketCounter.size() - 1);
+					bracketCounter.pop();
 				} else if (ch == openBracket1) {
 					if (level0Checker.get()) throw new RuntimeException(String.format("Invalid char %s index %s in <> level. Input: \"%s\"", ch, i, input));
-					bracketCounter.add(1);
+					bracketCounter.push(1);
 				} else if (ch == closeBracket1) {
 					if (checkDiff.test(1)) throw new RuntimeException(String.format("Invalid closing char %s index %s. Input: \"%s\"", ch, i, input));
-					bracketCounter.remove(bracketCounter.size() - 1);
+					bracketCounter.pop();
 				} else if (ch == openBracket2) {
 					if (level0Checker.get()) throw new RuntimeException(String.format("Invalid char %s index %s in <> level. Input: \"%s\"", ch, i, input));
-					bracketCounter.add(2);
+					bracketCounter.push(2);
 				} else if (ch == closeBracket2) {
 					if (checkDiff.test(2)) throw new RuntimeException(String.format("Invalid closing char %s index %s. Input: \"%s\"", ch, i, input));
-					bracketCounter.remove(bracketCounter.size() - 1);
+					bracketCounter.pop();
 				}
 			}
 

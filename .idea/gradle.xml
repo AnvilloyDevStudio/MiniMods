@@ -4,6 +4,8 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
+        <option name="delegatedBuild" value="true" />
+        <option name="testRunner" value="GRADLE" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="gradleHome" value="C:/Gradle/gradle-7.5.1" />
@@ -14,6 +16,7 @@
             <option value="$PROJECT_DIR$/minicraft" />
             <option value="$PROJECT_DIR$/minicraft/source" />
             <option value="$PROJECT_DIR$/mods/core-ores" />
+            <option value="$PROJECT_DIR$/mods/debug-test" />
           </set>
         </option>
       </GradleProjectSettings>

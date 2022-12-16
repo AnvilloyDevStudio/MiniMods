@@ -16,7 +16,7 @@ include "minicraft-base:source"
 project(":minicraft-base:source").projectDir = file("minicraft/source")
 
 file('mods').eachDir { dir ->
-  if (!dir.name.equals("core")) {
+  if (dir.name != "core") {
     include "mod-${dir.name}"
     project(":mod-${dir.name}").projectDir = dir
   }

@@ -1,6 +1,7 @@
 package io.github.anvilloystudio.minimods.api;
 
 /** These ANSI Codes can be used in console logging. */
+@SuppressWarnings("unused")
 public class ConsoleColors {
 	// Reset
     public static final String RESET = "\033[0m";  // Text Reset

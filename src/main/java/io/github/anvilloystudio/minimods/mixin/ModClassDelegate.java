@@ -71,7 +71,7 @@ final public class ModClassDelegate {
 				ctor.setAccessible(true);
 				mixinTransformer = ctor.newInstance();
 			} catch (ReflectiveOperationException e) {
-				Logger.debug("Can't create Mixin transformer through reflection (only applicable for 0.8-0.8.2): %s", e);
+				Logger.debug("Can't create Mixin transformer through reflection (only applicable for 0.8-0.8.2): {}", e);
 
 				// both lookups failed (not received through IMixinService.offer and not found through reflection)
 				throw new IllegalStateException("mixin transformer unavailable?");
@@ -110,7 +110,7 @@ final public class ModClassDelegate {
 			throw new RuntimeException(e);
 		}
 
-		Logger.info("added code source %s", path);
+		Logger.info("added code source {}", path);
 	}
 
 	public void setAllowedPrefixes(Path codeSource, String... prefixes) {

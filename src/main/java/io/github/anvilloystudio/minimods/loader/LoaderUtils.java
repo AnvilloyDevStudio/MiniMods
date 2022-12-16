@@ -41,23 +41,33 @@ public class LoaderUtils {
 		}
 	}
 
+	/**
+	 * Getting the mod ID of the mod class calling the method calling this.
+	 * @return The caller mod ID. `null` if the caller is in the core.
+	 * @throws IllegalAccessException if the caller mod information is unable to be obtained.
+	 */
 	public static String getCallerModId() throws IllegalAccessException {
+		return getCallerModId(1);
+	}
+	/**
+	 * Getting the mod ID of the mod class calling the method calling this.
+	 * @param i The number of calls tracing back from the method calling this.
+	 * @return The caller mod ID. `null` if the caller is in the core.
+	 * @throws IllegalAccessException if the caller mod information is unable to be obtained.
+	 */
+	public static String getCallerModId(int i) throws IllegalAccessException {
 		Class<?>[] classes = LoaderUtils.CallingClass.INSTANCE.getCallingClasses();
-		ClassLoader cl = classes[3].getClassLoader();
+		ClassLoader cl = classes[3 + i].getClassLoader();
 		if (cl == LoaderUtils.class.getClassLoader()) { // If it is coremods.
 			return null;
 		} else if (cl instanceof URLClassLoader) {
-			if (isInLoaderStage()) { // If it is in loader level.
-				for (ModContainer mod : Mods.mods) {
-					try {
-						if (Paths.get(((URLClassLoader) cl).getURLs()[0].toURI()).equals(mod.jarPath))
-							return mod.metadata.modId;
-					} catch (URISyntaxException e) {
-						throw new RuntimeException(e);
-					}
+			for (ModContainer mod : Mods.mods) {
+				try {
+					if (Paths.get(((URLClassLoader) cl).getURLs()[0].toURI()).equals(mod.jarPath))
+						return mod.metadata.modId;
+				} catch (URISyntaxException e) {
+					throw new RuntimeException(e);
 				}
-			} else { // If it is in Game class.
-				// TODO
 			}
 		}
 
