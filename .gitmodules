@@ -1,6 +1,3 @@
-[submodule "mod-core-ores"]
-	path = mods/core-ores
-	url = ../Mod-Core-Ores
 [submodule "mods/core-redstone"]
 	path = mods/core-redstone
 	url = ../Mod-Core-Redstone
