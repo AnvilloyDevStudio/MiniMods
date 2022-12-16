@@ -5,5 +5,6 @@
     <mapping directory="$PROJECT_DIR$/mods/core-ores" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/mods/core-ores/Mod-Core-Ores" vcs="" />
     <mapping directory="$PROJECT_DIR$/mods/core-redstone" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/mods/core-redstone/Mod-Core-Redstone" vcs="Git" />
   </component>
 </project>
