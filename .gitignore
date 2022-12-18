@@ -8,5 +8,7 @@ bin
 
 /minicraft/patches/a
 
+/.buildProfile
+
 # Temporary ignore temporary referencing libraries
 /libraries/*

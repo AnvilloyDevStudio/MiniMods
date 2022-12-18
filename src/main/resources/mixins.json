@@ -2,6 +2,7 @@
   "required": true,
   "package": "io.github.anvilloystudio.minimods.api.mixins",
   "priority": 2147483647,
+  "minVersion": "0.8.5",
   "mixins": [
     "DoorTileMixin",
     "GameMixin",
@@ -14,6 +15,7 @@
     "OreTypeMixin",
     "PlayerMixin",
     "RendererMixin",
+    "SpriteMixin",
     "SpritePxMixin",
     "TileMixin",
     "TilesMixin",
