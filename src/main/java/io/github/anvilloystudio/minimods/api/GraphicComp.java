@@ -8,6 +8,7 @@ import minicraft.gfx.SpriteSheet;
 import javax.imageio.ImageIO;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -170,63 +171,72 @@ public class GraphicComp {
 	}
 
 	/**
+	 * Rotating the image by the specified degrees.
+	 * Reference: https://stackoverflow.com/a/73588987.
+	 * @param source The source of {@link BufferedImage}.
+	 * @param degrees The degrees to rotate.
+	 * @return The rotated {@link BufferedImage}.
+	 */
+	public static BufferedImage rotateBy(BufferedImage source, double degrees) {
+		// The size of the original image
+		int w = source.getWidth();
+		int h = source.getHeight();
+		// The angel of the rotation in radians
+		double rads = Math.toRadians(degrees);
+		// Some nice math which demonstrates I have no idea what I'm talking about
+		// Okay, this calculates the amount of space the image will need in
+		// order not be clipped when it's rotated
+		double sin = Math.abs(Math.sin(rads));
+		double cos = Math.abs(Math.cos(rads));
+		int newWidth = (int) Math.floor(w * cos + h * sin);
+		int newHeight = (int) Math.floor(h * cos + w * sin);
+
+		// A new image, into which the original can be painted
+		BufferedImage rotated = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2d = rotated.createGraphics();
+		// The transformation which will be used to actually rotate the image
+		// The translation, actually makes sure that the image is positioned onto
+		// the viewable area of the image
+		AffineTransform at = new AffineTransform();
+		at.translate((newWidth - w) / 2.0, (newHeight - h) / 2.0);
+
+		// And we rotate about the center of the image...
+		int x = w / 2;
+		int y = h / 2;
+		at.rotate(rads, x, y);
+		g2d.setTransform(at);
+		// And we paint the original image onto the new image
+		g2d.drawImage(source, 0, 0, null);
+		g2d.dispose();
+
+		return rotated;
+	}
+
+	/**
 	 * Rotating the {@link BufferedImage} clockwise by 90 degrees.
-	 * Reference: https://stackoverflow.com/a/52663539.
 	 * @param src The source of {@link BufferedImage}.
 	 * @return The rotated {@link BufferedImage}.
 	 */
 	public static BufferedImage rotateClockwise90(BufferedImage src) {
-		int width = src.getWidth();
-		int height = src.getHeight();
-
-		BufferedImage dest = new BufferedImage(height, width, src.getType());
-
-		Graphics2D graphics2D = dest.createGraphics();
-		graphics2D.translate((height - width) / 2, (height - width) / 2);
-		graphics2D.rotate(Math.PI / 2, height / 2.0, width / 2.0);
-		graphics2D.drawRenderedImage(src, null);
-
-		return dest;
+		return rotateBy(src, 90);
 	}
 
 	/**
 	 * Rotating the {@link BufferedImage} anti-clockwise by 90 degrees.
-	 * Reference: https://stackoverflow.com/a/52663539.
 	 * @param src The source of {@link BufferedImage}.
 	 * @return The rotated {@link BufferedImage}.
 	 */
 	public static BufferedImage rotateAnticlockwise90(BufferedImage src) {
-		int width = src.getWidth();
-		int height = src.getHeight();
-
-		BufferedImage dest = new BufferedImage(height, width, src.getType());
-
-		Graphics2D graphics2D = dest.createGraphics();
-		graphics2D.translate((height - width) / 2, (height - width) / 2);
-		graphics2D.rotate(-Math.PI / 2, height / 2.0, width / 2.0);
-		graphics2D.drawRenderedImage(src, null);
-
-		return dest;
+		return rotateBy(src, -90);
 	}
 
 	/**
 	 * Rotating the {@link BufferedImage} by 180 degrees. (Inverted)
-	 * Reference: https://stackoverflow.com/a/52663539.
 	 * @param src The source of {@link BufferedImage}.
 	 * @return The rotated {@link BufferedImage}.
 	 */
 	public static BufferedImage rotate180(BufferedImage src) {
-		int width = src.getWidth();
-		int height = src.getHeight();
-
-		BufferedImage dest = new BufferedImage(width, height, src.getType());
-
-		Graphics2D graphics2D = dest.createGraphics();
-		graphics2D.translate((height - width) / 2, (height - width) / 2);
-		graphics2D.rotate(Math.PI, height / 2.0, width / 2.0);
-		graphics2D.drawRenderedImage(src, null);
-
-		return dest;
+		return rotateBy(src, 180);
 	}
 
 	/**
