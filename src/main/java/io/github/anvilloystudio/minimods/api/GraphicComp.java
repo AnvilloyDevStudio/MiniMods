@@ -1,15 +1,16 @@
 package io.github.anvilloystudio.minimods.api;
 
-import java.awt.Rectangle;
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.imageio.ImageIO;
-
 import io.github.anvilloystudio.minimods.api.mixins.SpritePxMixin;
 import minicraft.gfx.Screen;
 import minicraft.gfx.Sprite;
 import minicraft.gfx.SpriteSheet;
+
+import javax.imageio.ImageIO;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class GraphicComp {
 	public static class ModSprite extends Sprite {
@@ -166,6 +167,66 @@ public class GraphicComp {
 	 */
 	public static SpriteSheet getSpriteSheetFromInputStream(InputStream is) throws IOException {
 		return new SpriteSheet(ImageIO.read(is));
+	}
+
+	/**
+	 * Rotating the {@link BufferedImage} clockwise by 90 degrees.
+	 * Reference: https://stackoverflow.com/a/52663539.
+	 * @param src The source of {@link BufferedImage}.
+	 * @return The rotated {@link BufferedImage}.
+	 */
+	public static BufferedImage rotateClockwise90(BufferedImage src) {
+		int width = src.getWidth();
+		int height = src.getHeight();
+
+		BufferedImage dest = new BufferedImage(height, width, src.getType());
+
+		Graphics2D graphics2D = dest.createGraphics();
+		graphics2D.translate((height - width) / 2, (height - width) / 2);
+		graphics2D.rotate(Math.PI / 2, height / 2.0, width / 2.0);
+		graphics2D.drawRenderedImage(src, null);
+
+		return dest;
+	}
+
+	/**
+	 * Rotating the {@link BufferedImage} anti-clockwise by 90 degrees.
+	 * Reference: https://stackoverflow.com/a/52663539.
+	 * @param src The source of {@link BufferedImage}.
+	 * @return The rotated {@link BufferedImage}.
+	 */
+	public static BufferedImage rotateAnticlockwise90(BufferedImage src) {
+		int width = src.getWidth();
+		int height = src.getHeight();
+
+		BufferedImage dest = new BufferedImage(height, width, src.getType());
+
+		Graphics2D graphics2D = dest.createGraphics();
+		graphics2D.translate((height - width) / 2, (height - width) / 2);
+		graphics2D.rotate(-Math.PI / 2, height / 2.0, width / 2.0);
+		graphics2D.drawRenderedImage(src, null);
+
+		return dest;
+	}
+
+	/**
+	 * Rotating the {@link BufferedImage} by 180 degrees. (Inverted)
+	 * Reference: https://stackoverflow.com/a/52663539.
+	 * @param src The source of {@link BufferedImage}.
+	 * @return The rotated {@link BufferedImage}.
+	 */
+	public static BufferedImage rotate180(BufferedImage src) {
+		int width = src.getWidth();
+		int height = src.getHeight();
+
+		BufferedImage dest = new BufferedImage(width, height, src.getType());
+
+		Graphics2D graphics2D = dest.createGraphics();
+		graphics2D.translate((height - width) / 2, (height - width) / 2);
+		graphics2D.rotate(Math.PI, height / 2.0, width / 2.0);
+		graphics2D.drawRenderedImage(src, null);
+
+		return dest;
 	}
 
 	/**
