@@ -9,7 +9,7 @@ import minicraft.level.tile.Tiles;
 @Mixin(Tiles.class)
 public interface TilesMixin {
 	@Invoker(value = "add", remap = false)
-	public static void invokeAdd(int id, Tile tile) {
+	static void invokeAdd(int id, Tile tile) {
 		throw new AssertionError();
 	}
 }
