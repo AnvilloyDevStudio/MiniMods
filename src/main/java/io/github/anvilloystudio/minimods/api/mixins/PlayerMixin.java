@@ -41,7 +41,7 @@ public class PlayerMixin extends Mob implements ItemHolder, ClientTickable {
 		if (input.getKey("interact").clicked) {
 			Point t = getInteractionTile();
 			Tile tile = level.getTile(t.x, t.y);
-			((TileInteractable) tile).interact(level, t.x, t.y, (Player) (Object) this, activeItem, dir);
+			((TileInteractable) tile).interactTile(level, t.x, t.y, (Player) (Object) this, activeItem, dir);
 		}
 	}
 

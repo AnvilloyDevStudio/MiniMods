@@ -5,10 +5,10 @@ import minicraft.entity.mob.Player;
 import minicraft.item.Item;
 import minicraft.level.Level;
 
-public interface TileInteractable {
+public interface TileDestroyable {
 	/**
 	 * Called when you hit an item on a tile (ex: Pickaxe on rock).
-	 * INTERACT ONLY; {@link minicraft.level.tile.Tile#interact(Level, int, int, Player, Item, Direction) Tile#interact} is now only for tile destroying.
+	 * DESTROY ONLY; {@link minicraft.level.tile.Tile#interact(Level, int, int, Player, Item, Direction) Tile#interact} is now only for tile destroying.
 	 * @param level The level the player is on.
 	 * @param xt X position of the player in tile coordinates (32x per tile).
 	 * @param yt Y position of the player in tile coordinates (32px per tile).
@@ -17,5 +17,5 @@ public interface TileInteractable {
 	 * @param attackDir The direction of the player attacking.
 	 * @return Was the operation successful?
 	 */
-	boolean interactTile(Level level, int xt, int yt, Player player, Item item, Direction attackDir);
+	boolean destroy(Level level, int xt, int yt, Player player, Item item, Direction attackDir);
 }
