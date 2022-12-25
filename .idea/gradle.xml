@@ -17,6 +17,7 @@
             <option value="$PROJECT_DIR$/minicraft/source" />
             <option value="$PROJECT_DIR$/mods/core-ores" />
             <option value="$PROJECT_DIR$/mods/core-redstone" />
+            <option value="$PROJECT_DIR$/mods/core-redstone-extra" />
             <option value="$PROJECT_DIR$/mods/debug-test" />
           </set>
         </option>
