@@ -6,3 +6,6 @@
 [submodule "mod-core-redstone"]
 	path = mods/core-redstone
 	url = ../Mod-Core-Redstone
+[submodule "mod-core-redstone-extra"]
+	path = mods/core-redstone-extra
+	url = ../Mod-Core-Redstone-Extra
