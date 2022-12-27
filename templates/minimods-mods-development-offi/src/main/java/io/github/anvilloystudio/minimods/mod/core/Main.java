@@ -5,6 +5,6 @@ public class Main {
 		System.out.println("THIS JAR IS NOT PURPOSED TO BE EXECUTED DIRECTLY.");
 	}
 
-    public static void entry() {
-    }
+	public static void entry() {
+	}
 }
