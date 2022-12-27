@@ -32,31 +32,20 @@ public class ModConfig {
 	}
 
 	/**
-	 * Create and return a new config instance if there is not an existed one.<br/>
-	 * The config with the caller mod class will be created.
-	 * @return The newly created config. `null` if there is existed one.
+	 * Registering the given config to the mod config list.
+	 * @param cfg The related mod config.
+	 * @return `true` if there was no associated mod config. `false` and the given config was not added to the list otherwise.
 	 */
-	@Nullable
-	public static ModConfig createConfigIfNotExist() { return createConfigIfNotExist(getCallerModId()); }
-	/**
-	 * Create and return a new config instance if there is not an existed one.<br/>
-	 * The config with specified mod ID will be created.
-	 * @param modId The mod ID.
-	 * @return The newly created config. `null` if there is existed one.
-	 */
-	@Nullable
-	public static ModConfig createConfigIfNotExist(String modId) {
-		ModConfig cfg = new ModConfig(modId, false);
-		return addConfig(modId, cfg) ? cfg : null;
+	public static boolean registerConfig(ModConfig cfg) {
+		return registerConfig(cfg.modId, cfg);
 	}
-
 	/**
-	 * Add the given config to the mod config list.
+	 * Registering the given config to the mod config list.
 	 * @param modId The associated mod ID of the given config.
 	 * @param cfg The related mod config.
 	 * @return `true` if there was no associated mod config. `false` and the given config was not added to the list otherwise.
 	 */
-	private static boolean addConfig(String modId, ModConfig cfg) {
+	public static boolean registerConfig(String modId, ModConfig cfg) {
 		return configs.putIfAbsent(modId, cfg) == null; // The config exists.
 	}
 
@@ -66,21 +55,13 @@ public class ModConfig {
 	private final ConcurrentConfigSpec configSpec = new ConcurrentConfigSpec();
 
 	/**
-	 * Creating a mod config by the mod package it belongs to.
+	 * Creating a mod config by the mod package it called by.
 	 */
-	public ModConfig() { this(1); }
-	private ModConfig(int i) { this(getCallerModId(i)); }
-	/**
-	 * Creating a mod config by the specified mod ID.
-	 * @param modId The mod ID.
-	 */
-	public ModConfig(String modId) { this(modId, true); }
-	private ModConfig(String modId, boolean addToList) {
-		this.modId = modId;
+	public ModConfig() {
+		this.modId = getCallerModId();
 		this.file = new File(ModConfigFileHandler.configDir, this.modId + ".cfg");
 		FileHandler.checkAndDeleteIfDir(file);
-		if (addToList) addConfig(this.modId, this);
-		config = FileConfig.ofConcurrent(file, TomlFormat.instance());
+		config = FileConfig.ofConcurrent(file, TomlFormat.instance()).checked();
 	}
 	/**
 	 * Creating a mod config by the mod ID and the file.<br/>
@@ -91,13 +72,12 @@ public class ModConfig {
 	public ModConfig(String modId, File file) {
 		this.modId = modId;
 		this.file = file;
-		config = FileConfig.of(file, TomlFormat.instance());
+		config = FileConfig.of(file, TomlFormat.instance()).checked();
 	}
 
-	private static String getCallerModId() { return getCallerModId(1); }
-	private static String getCallerModId(int i) {
+	private static String getCallerModId() {
 		try {
-			return LoaderUtils.getCallerModId(1 + i);
+			return LoaderUtils.getCallerModId(1);
 		} catch (IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
