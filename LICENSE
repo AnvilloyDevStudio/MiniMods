@@ -10,7 +10,7 @@ This software or library, MiniMods, is managed by the host or organization, Anvi
 
 In general, permissions of behaviours of copying, redistribution and modification are explicitly described in the GNU Lesser Library Public License, version 2.1, which is the general license of this software used for the source code. While the licensee is using this software, further more terms restricting the users are described in the terms which are described in another document apart from this license document.
 
-There is also GNU Library Public License applied to distributions of the modified version of Minicraft+ Java executable file (Java ARchive), including the patch files included in the source code but applied directly to the source code of Minicraft+ JAR file in the distributions.
+There is also GNU Library Public License applied to distributions of the modified version of Minicraft+ Java executable file (Java ARchive), including the patch files included in the source code but applied directly to the source code of Minicraft+ JAR file in the distributions, and source codes within the directory named "minicraft" from the repository's root directory.
 
 This license is automatically activated by users using or downloading the distributions in any form, and the users are regarded as the licensees under this license.
 
