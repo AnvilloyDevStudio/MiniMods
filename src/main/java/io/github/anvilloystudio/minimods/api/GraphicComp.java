@@ -1,9 +1,13 @@
 package io.github.anvilloystudio.minimods.api;
 
+import io.github.anvilloystudio.minimods.api.interfaces.ScreenRenderer;
+import io.github.anvilloystudio.minimods.api.mixins.SpriteMixin;
 import io.github.anvilloystudio.minimods.api.mixins.SpritePxMixin;
+import minicraft.gfx.Point;
 import minicraft.gfx.Screen;
 import minicraft.gfx.Sprite;
 import minicraft.gfx.SpriteSheet;
+import org.jetbrains.annotations.Range;
 
 import javax.imageio.ImageIO;
 import java.awt.Graphics2D;
@@ -28,7 +32,7 @@ public class GraphicComp {
 			this(pos%32, pos/32, 1, 1, sheet);
 		}
 
-		private ModPx[][] modSpritePixels;
+		public final ModPx[][] modSpritePixels;
 
 		/**
 		 * 	Creates a reference to an 8x8 sprite in a spritesheet. Specify the position and sheet of the sprite to create.
@@ -109,7 +113,7 @@ public class GraphicComp {
 			screen.render(x, y, ((SpritePxMixin) modSpritePixels[r][c]).getSpritePos(), mirror, modSpritePixels[r][c].spriteSheet, whiteTint, false/*TODO , color */);
 		}
 
-		public void renderMirrorred(int fullMirror, Screen screen, int x, int y) {
+		public void renderMirrored(int fullMirror, Screen screen, int x, int y) {
 			int h = spritePixels.length;
 			int w = spritePixels[0].length;
 			boolean mirrorX = (fullMirror&2)>0;
@@ -122,7 +126,7 @@ public class GraphicComp {
 				}
 			}
 		}
-		public void renderMirrorred(int fullMirror, Screen screen, int x, int y, int mirror) {
+		public void renderMirrored(int fullMirror, Screen screen, int x, int y, int mirror) {
 			int h = spritePixels.length;
 			int w = spritePixels[0].length;
 			boolean mirrorX = (fullMirror&1)>0;
@@ -135,7 +139,7 @@ public class GraphicComp {
 				}
 			}
 		}
-		public void renderMirrorred(int fullMirror, Screen screen, int x, int y, int mirror, int whiteTint) {
+		public void renderMirrored(int fullMirror, Screen screen, int x, int y, int mirror, int whiteTint) {
 			int h = spritePixels.length;
 			int w = spritePixels[0].length;
 			boolean mirrorX = (fullMirror&1)>0;
@@ -150,7 +154,7 @@ public class GraphicComp {
 		}
 
 		public static class ModPx extends Px {
-			protected SpriteSheet spriteSheet;
+			public final SpriteSheet spriteSheet;
 
 			public ModPx(int sheetX, int sheetY, int mirroring, SpriteSheet sheet) {
 				super(sheetX, sheetY, mirroring, 0);
@@ -158,6 +162,71 @@ public class GraphicComp {
 				this.spriteSheet = sheet;
 			}
 		}
+	}
+
+	public static class SpriteRenderer {
+		public enum Rotation {
+			NONE, CLOCKWISE, ANTICLOCKWISE, INVERTED;
+
+			public static final Rotation[] VALUES = values();
+
+			/**
+			 * Getting the actual rotation based on {@link minicraft.entity.Direction Direction} with {@code DOWN} as 0.
+			 * @param dir should be in range 0 to 3 from constant ordinal values of {@code Direction}.
+			 * @return the corresponding rotation
+			 */
+			public static Rotation getFromDirectionDown(@Range(from = 0, to = 3) int dir) {
+				switch (dir) {
+					case 0: default: return NONE; // DOWN
+					case 1: return INVERTED; // UP
+					case 2: return CLOCKWISE; // LEFT
+					case 3: return ANTICLOCKWISE; // RIGHT
+				}
+			}
+		}
+
+		private static SpriteSheet getSpriteSheet(Sprite.Px px) {
+			return px instanceof ModSprite.ModPx ? ((ModSprite.ModPx) px).spriteSheet : ((SpritePxMixin) px).getSpriteSheet();
+		}
+
+		public static void render(Screen screen, int x, int y, Sprite sprite, Rotation rotation) { render(screen, x, y, sprite, 0, rotation); }
+		public static void render(Screen screen, int x, int y, Sprite sprite, int mirror, Rotation rotation) { render(screen, x, y, sprite, mirror, -1, rotation); }
+		public static void render(Screen screen, int x, int y, Sprite sprite, int mirror, int whiteTint, Rotation rotation) {
+			Sprite.Px[][] pixels = ((SpriteMixin) sprite).getSpritePixels();
+			boolean mirrorX = (mirror & 1) > 0;
+			boolean mirrorY = (mirror & 2) > 0;
+			for (int r = 0; r < pixels.length; ++r) {
+				for (int c = 0; c < pixels[r].length; ++c) {
+					int rs = r, cs = c;
+					if (mirrorX) rs = pixels.length - 1 - rs;
+					if (mirrorY) cs = pixels[r].length - 1 - cs;
+					int t = rs;
+					if (pixels.length == pixels[r].length) switch (rotation) {
+						case CLOCKWISE: rs = pixels.length - 1 - cs; cs = t; break;
+						case ANTICLOCKWISE: rs = cs; cs = pixels.length - 1 - t; break;
+						case INVERTED: rs = pixels.length - 1 - rs; cs = pixels.length - 1 - cs; break;
+					}
+
+					renderPixel(screen, x + c * 8, y + r * 8, pixels[rs][cs], mirror, whiteTint, rotation);
+				}
+			}
+		}
+
+		public static void renderPixel(Screen screen, int x, int y, Sprite.Px px, Rotation rotation) { renderPixel(screen, x, y, px, 0, rotation); }
+		public static void renderPixel(Screen screen, int x, int y, Sprite.Px px, int mirror, Rotation rotation) { renderPixel(screen, x, y, px, mirror, -1, rotation); }
+		public static void renderPixel(Screen screen, int x, int y, Sprite.Px px, int mirror, int whiteTint, Rotation rotation) {
+			((ScreenRenderer) screen).render(x, y, ((SpritePxMixin) px).getSpritePos(), mirror, getSpriteSheet(px), whiteTint, false, rotation/*TODO , color */);
+		}
+	}
+
+	public static Point renderPixelRotatedClockwise(int xs, int ys) {
+		return new Point(7 - ys, xs);
+	}
+	public static Point renderPixelRotatedAnticlockwise(int xs, int ys) {
+		return new Point(ys, 7 - xs);
+	}
+	public static Point renderPixelRotatedUpsideDown(int xs, int ys) {
+		return new Point(7 - xs, 7 - ys);
 	}
 
 	/**
@@ -277,95 +346,4 @@ public class GraphicComp {
 
 		return new Sprite(pixels);
 	}
-
-	// The original rotated pixel rendering lowers the performance, so this will not be added.
-	// public static class MirrorableSprite extends Sprite {
-	// 	public void renderRotated(Screen screen, int x, int y, int rotation) {
-	// 		int h = spritePixels.length;
-	// 		int w = spritePixels[0].length;
-	// 		for (int r = 0; r < h; r++) {
-	// 			for (int c = 0; c < w; c++) {
-	// 				int xp = c;
-	// 				int yp = r;
-	// 				if (rotation == 1) {
-	// 					xp = w-1-c;
-	// 					yp = h-1-r;
-	// 				} else if (rotation == 2) {
-	// 					xp = r;
-	// 					yp = w-1-c;
-	// 				} else if (rotation == 3) {
-	// 					xp = h-1-r;
-	// 					yp = c;
-	// 				}
-	// 				renderPixelRotated(xp, yp, screen, x+8*c, y+8*r, rotation);
-	// 			}
-	// 		}
-	// 	}
-	// 	public void renderPixelRotated(int c, int r, Screen screen, int x, int y) {
-	// 		renderPixelRotated(c, r, screen, x, y, 0);
-	// 	}
-	// 	public void renderPixelRotated(int c, int r, Screen screen, int x, int y, int rotation) {
-	// 		renderPixelRotated(c, r, screen, x, y, rotation, this.color);
-	// 	}
-	// 	public void renderPixelRotated(int c, int r, Screen screen, int x, int y, int rotation, int whiteTint) {
-	// 		if (spritePixels[r][c].spriteSheet != null) {
-	// 			GraphicComp.renderRotated(x, y, spritePixels[r][c].sheetPos, rotation, spritePixels[r][c].spriteSheet, whiteTint, false); // Render the sprite pixel.
-	// 		} else {
-	// 			// GraphicComp.renderRotated(x, y, spritePixels[r][c].sheetPos, mirror, spritePixels[r][c].spriteSheetNum, whiteTint);
-	// 		}
-	// 	}
-	// }
-    // /** Renders an object from the sprite sheet based on screen coordinates, tile (SpriteSheet location), colors, and bits (for mirroring). I believe that xp and yp refer to the desired position of the upper-left-most pixel. */
-    // public static void renderRotated(int xp, int yp, int tile, int bits, SpriteSheet sheet, int whiteTint, boolean fullbright) {
-	// 	Screen screen = Renderer.screen;
-	// 	// xp and yp are originally in level coordinates, but offset turns them to screen coordinates.
-	// 	xp -= screen.xOffset; //account for screen offset
-	// 	yp -= screen.yOffset;
-
-	// 	int xTile = tile % 32; // Gets x position of the spritesheet "tile"
-	// 	int yTile = tile / 32; // Gets y position
-	// 	int toffs = xTile * 8 + yTile * 8 * sheet.width; // Gets the offset of the sprite into the spritesheet pixel array, the 8's represent the size of the box. (8 by 8 pixel sprite boxes)
-
-	// 	// THIS LOOPS FOR EVERY PIXEL
-	// 	for (int y = 0; y < 8; y++) { // Loops 8 times (because of the height of the tile)
-	// 		int ys = y; // Current y pixel
-	// 		if (y + yp < 0 || y + yp >= Screen.h) continue; // If the pixel is out of bounds, then skip the rest of the loop.
-	// 		for (int x = 0; x < 8; x++) { // Loops 8 times (because of the width of the tile)
-	// 			if (x + xp < 0 || x + xp >= Screen.w) continue; // Skip rest if out of bounds.
-
-	// 			int xs = x; // Current x pixel
-	// 			ys = y;
-	// 			if (bits == 1) {
-	// 				xs = 7-x;
-	// 				ys = 7-y;
-	// 			} else if (bits == 2) {
-	// 				xs = y;
-	// 				ys = 7-x;
-	// 			} else if (bits == 3) {
-	// 				xs = 7-y;
-	// 				ys = x;
-	// 			}
-
-	// 			int col = sheet.pixels[toffs + xs + ys * sheet.width]; // Gets the color of the current pixel from the value stored in the sheet.
-
-	// 			boolean isTransparent = (col >> 24 == 0);
-
-	// 			if (!isTransparent) {
-	// 				int index = (x + xp) + (y + yp) * Screen.w;
-
-	// 				if (whiteTint != -1 && col == 0x1FFFFFF) {
-	// 					// If this is white, write the whiteTint over it
-	// 					screen.pixels[index] = whiteTint & 0xFFFFFF;
-	// 				} else {
-	// 					// Inserts the colors into the image
-	// 					if (fullbright) {
-	// 						screen.pixels[index] = Color.WHITE;
-	// 					} else {
-	// 						screen.pixels[index] = col & 0xFFFFFF;
-	// 					}
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-	// }
 }

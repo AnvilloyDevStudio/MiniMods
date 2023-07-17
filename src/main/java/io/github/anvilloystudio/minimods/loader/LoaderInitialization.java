@@ -46,7 +46,9 @@ public class LoaderInitialization {
 		ModLoadingHandler.overallPro.text = "Starting Initialization";
 
 		// Initializing LoggingProvider...it would not work if don't initialize earlier.
+		//noinspection ResultOfMethodCallIgnored
 		ProviderRegistry.getLoggingProvider();
+		ModConfigFileHandler.loadLoaderStageModConfig();
 		Mods.init();
 
 		Mods.launchGame(classLoader.getClassLoader(), args);

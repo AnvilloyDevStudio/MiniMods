@@ -26,10 +26,10 @@ public class PlayerMixin extends Mob implements ItemHolder, ClientTickable {
 	}
 
 	@Shadow(remap = false)
-	private InputHandler input;
+	protected InputHandler input;
 
 	@Shadow(remap = false)
-	private Item activeItem;
+	public Item activeItem;
 
 	@Shadow(remap = false)
 	private Point getInteractionTile() {

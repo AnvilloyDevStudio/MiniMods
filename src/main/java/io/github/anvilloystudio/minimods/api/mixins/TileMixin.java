@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(Tile.class)
 public abstract class TileMixin implements TileInteractable, TileDestroyable {
-	@Shadow
+	@Shadow(remap = false)
 	public abstract boolean interact(Level level, int xt, int yt, Player player, Item item, Direction attackDir);
 
 	@Unique

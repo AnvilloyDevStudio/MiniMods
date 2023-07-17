@@ -2,7 +2,7 @@ package io.github.anvilloystudio.minimods.api;
 
 import com.electronwill.nightconfig.core.ConcurrentConfigSpec;
 import com.electronwill.nightconfig.core.ConfigSpec;
-import com.electronwill.nightconfig.core.file.FileConfig;
+import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.toml.TomlFormat;
 import io.github.anvilloystudio.minimods.loader.FileHandler;
 import io.github.anvilloystudio.minimods.loader.LoaderUtils;
@@ -10,6 +10,7 @@ import io.github.anvilloystudio.minimods.loader.ModConfigFileHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 
 /**
@@ -51,7 +52,7 @@ public class ModConfig {
 
 	private final String modId;
 	private final File file;
-	private final FileConfig config;
+	private final CommentedFileConfig config;
 	private final ConcurrentConfigSpec configSpec = new ConcurrentConfigSpec();
 
 	/**
@@ -61,18 +62,24 @@ public class ModConfig {
 		this.modId = getCallerModId();
 		this.file = new File(ModConfigFileHandler.configDir, this.modId + ".cfg");
 		FileHandler.checkAndDeleteIfDir(file);
-		config = FileConfig.ofConcurrent(file, TomlFormat.instance()).checked();
+		try {
+			//noinspection ResultOfMethodCallIgnored
+			file.createNewFile();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		config = CommentedFileConfig.ofConcurrent(file, TomlFormat.instance()).checked();
 	}
 	/**
 	 * Creating a mod config by the mod ID and the file.<br/>
 	 * This instance is not added into the config list.
 	 * @param modId The mod ID.
-	 * @param file The config file (in JSON format).
+	 * @param file The config file (in TOML format).
 	 */
 	public ModConfig(String modId, File file) {
 		this.modId = modId;
 		this.file = file;
-		config = FileConfig.of(file, TomlFormat.instance()).checked();
+		config = CommentedFileConfig.of(file, TomlFormat.instance()).checked();
 	}
 
 	private static String getCallerModId() {
@@ -94,7 +101,7 @@ public class ModConfig {
 	 * Getting the config instance of this mod config.
 	 * @return The config object.
 	 */
-	public FileConfig getConfig() {
+	public CommentedFileConfig getConfig() {
 		return config;
 	}
 	/**

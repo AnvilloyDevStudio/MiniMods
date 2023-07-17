@@ -18,6 +18,7 @@ public class LevelGenMixin {
 		ModTileGen.replaceTilesWithMod(0, map, data, w, h);
 	}
 
+	@SuppressWarnings("InvalidInjectorMethodSignature")
 	@Inject(method = "createDungeon", at = @At(value = "TAIL", remap = false), remap = false, locals = LocalCapture.CAPTURE_FAILHARD)
 	private static void injectCreateDungeon(int w, int h, CallbackInfoReturnable<byte[][]> ci,
 			LevelGen noise1, LevelGen noise2,

@@ -1,15 +1,15 @@
 package io.github.anvilloystudio.minimods.api;
 
+import minicraft.item.Item;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.function.Supplier;
 
-import minicraft.item.Item;
-
 public class OreTypeMixinEnumUtil {
-	private static HashSet<OreTypeMixinEnumData> toAdds = new HashSet<>();
+	private static final HashSet<OreTypeMixinEnumData> toAdds = new HashSet<>();
 
 	public static class OreTypeMixinEnumData {
 		public final String internalName;

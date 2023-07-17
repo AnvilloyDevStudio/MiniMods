@@ -4,6 +4,8 @@ MiniMods is a mod loader for Minicraft+. To learn more about Minicraft+, you may
 
 ## Building
 
-To build this project, the most recommended way is to use the [local batch file](build.bat) as it requires elevation in Windows ONLY. Use `.\build build` for Windows.
+As there are several batch files in this project, it is recommended to use Windows.
+
+To build this project, the most recommended way is to use the [local batch file](build.bat). Use `.\build build` for Windows.
 
 Since there are some potential problem when executing general `.\gradlew build`. Please execute `.\gradlew :build` instead.

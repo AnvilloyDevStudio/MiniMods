@@ -4,6 +4,7 @@
   "priority": 2147483647,
   "minVersion": "0.8.5",
   "mixins": [
+    "ColorMixin",
     "DoorTileMixin",
     "GameMixin",
     "InputHandlerMixin",
@@ -16,6 +17,7 @@
     "OreTypeMixin",
     "PlayerMixin",
     "RendererMixin",
+    "ScreenMixin",
     "SpriteMixin",
     "SpritePxMixin",
     "TileMixin",

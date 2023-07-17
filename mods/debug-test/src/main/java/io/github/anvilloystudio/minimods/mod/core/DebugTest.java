@@ -15,7 +15,7 @@ public class DebugTest {
 
 	public static void preInit() {
 		ModConfig cfg = new ModConfig();
-		cfg.put("test", "test");
+		cfg.getConfig().add("test", "test");
 		cfg.saveFile();
 	}
 }

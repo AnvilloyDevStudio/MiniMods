@@ -14,7 +14,7 @@ import minicraft.gfx.Screen;
 @Mixin(Renderer.class)
 public class RendererMixin {
 	@Shadow(remap = false)
-	private static Screen screen;
+	public static Screen screen;
 
 	@Inject(method = "renderGui()V", at = @At(value = "INVOKE", target = "Lminicraft/core/Renderer;renderDebugInfo()V", remap = false), remap = false)
 	private static void renderGUIBeforeDebug(CallbackInfo ci) {
