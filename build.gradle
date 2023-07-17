@@ -3,7 +3,6 @@ plugins {
     id 'java-library'
     id 'application'
     id "com.github.johnrengelman.shadow" version "7.1.2"
-    // id "com.dorongold.task-tree" version "2.1.0"
 }
 
 project.version = '0.4.0'
@@ -23,7 +22,7 @@ repositories {
 }
 
 dependencies {
-    // Minicraft+ base code dependencies. Apply for every version.
+    // Minicraft+ base code dependencies. Updated for every version.
     api project(path: ":minicraft-base", configuration: "shadow")
     api 'org.jetbrains:annotations:21.0.1'
     // api 'org.xbill:dns:2.0.8'
@@ -50,12 +49,14 @@ dependencies {
     api 'org.tinylog:tinylog-impl:2.4.1'
 
     // Main Loader dependencies.
-    api "org.spongepowered:mixin:0.8.5"
+    implementation "org.spongepowered:mixin:0.8.5"
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
-    api "net.java.dev.jna:jna:5.12.1"
-    api "net.java.dev.jna:jna-platform:5.12.1"
-    api "com.github.oshi:oshi-core:6.2.2"
+    implementation "net.java.dev.jna:jna:5.12.1"
+    implementation "net.java.dev.jna:jna-platform:5.12.1"
+    implementation "com.github.oshi:oshi-core:6.2.2"
     api "com.electronwill.night-config:toml:3.6.0"
+    runtimeOnly 'net.minecraftforge:accesstransformers:8.0.4'
+    implementation('org.apache.maven:maven-artifact:3.8.1')
     implementation fileTree(dir: 'libraries', include: '*.jar')
 
     // Dependencies of mixin.

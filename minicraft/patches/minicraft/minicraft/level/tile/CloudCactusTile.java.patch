@@ -1,5 +1,19 @@
---- a\minicraft\level\tile\CloudCactusTile.java	2021-09-08 21:34:58.000000000 +0800
-+++ b\minicraft\level\tile\CloudCactusTile.java	2022-09-13 19:25:58.789838200 +0800
+--- a\minicraft\level\tile\CloudCactusTile.java
++++ b\minicraft\level\tile\CloudCactusTile.java
+@@ -19,11 +19,11 @@
+ 
+ public class CloudCactusTile extends Tile {
+ 	private static Sprite sprite = new Sprite(6, 2, 2, 2, 1);
+-	
++
+ 	protected CloudCactusTile(String name) {
+ 		super(name, sprite);
+ 	}
+-	
++
+ 	public boolean mayPass(Level level, int x, int y, Entity e) {
+ 		return e instanceof AirWizard;
+ 	}
 @@ -39,7 +39,7 @@
  		if (item instanceof ToolItem) {
  			ToolItem tool = (ToolItem) item;
@@ -9,3 +23,22 @@
  					hurt(level, xt, yt, 1);
  					return true;
  				}
+@@ -47,7 +47,7 @@
+ 		}
+ 		return false;
+ 	}
+-	
++
+ 	public void hurt(Level level, int x, int y, int dmg) {
+ 		int damage = level.getData(x, y) + dmg;
+ 		int health = 10;
+@@ -63,7 +63,7 @@
+ 
+ 	public void bumpedInto(Level level, int x, int y, Entity entity) {
+ 		if (entity instanceof AirWizard) return;
+-		
++
+ 		if(entity instanceof Mob)
+ 			((Mob)entity).hurt(this, x, y, 1 + Settings.getIdx("diff"));
+ 	}
+

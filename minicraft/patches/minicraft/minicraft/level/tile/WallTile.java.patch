@@ -1,5 +1,5 @@
---- a\minicraft\level\tile\WallTile.java	2021-09-08 21:34:58.000000000 +0800
-+++ b\minicraft\level\tile\WallTile.java	2022-09-13 19:33:11.926605800 +0800
+--- a\minicraft\level\tile\WallTile.java
++++ b\minicraft\level\tile\WallTile.java
 @@ -56,8 +56,8 @@
  			ToolItem tool = (ToolItem) item;
  			if (tool.type == type.getRequiredTool()) {
@@ -11,3 +11,4 @@
  						return true;
  					}
  				} else {
+

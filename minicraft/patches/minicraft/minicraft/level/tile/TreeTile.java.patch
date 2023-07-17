@@ -1,5 +1,40 @@
---- a\minicraft\level\tile\TreeTile.java	2021-09-08 21:34:58.000000000 +0800
-+++ b\minicraft\level\tile\TreeTile.java	2022-09-13 19:32:03.798095500 +0800
+--- a\minicraft\level\tile\TreeTile.java
++++ b\minicraft\level\tile\TreeTile.java
+@@ -18,15 +18,15 @@
+ import minicraft.level.Level;
+ 
+ public class TreeTile extends Tile {
+-	
++
+ 	protected TreeTile(String name) {
+ 		super(name, (ConnectorSprite)null);
+ 		connectsToGrass = true;
+ 	}
+-	
++
+ 	public void render(Screen screen, Level level, int x, int y) {
+ 		Tiles.get("Grass").render(screen, level, x, y);
+-		
++
+ 		boolean u = level.getTile(x, y - 1) == this;
+ 		boolean l = level.getTile(x - 1, y) == this;
+ 		boolean r = level.getTile(x + 1, y) == this;
+@@ -70,13 +70,13 @@
+ 	public boolean mayPass(Level level, int x, int y, Entity e) {
+ 		return false;
+ 	}
+-	
++
+ 	@Override
+ 	public boolean hurt(Level level, int x, int y, Mob source, int dmg, Direction attackDir) {
+ 		hurt(level, x, y, dmg);
+ 		return true;
+ 	}
+-	
++
+ 	@Override
+ 	public boolean interact(Level level, int xt, int yt, Player player, Item item, Direction attackDir) {
+ 		if(Game.isMode("Creative"))
 @@ -84,8 +84,8 @@
  		if (item instanceof ToolItem) {
  			ToolItem tool = (ToolItem) item;
@@ -11,3 +46,18 @@
  					return true;
  				}
  			}
+@@ -96,11 +96,11 @@
+ 	public void hurt(Level level, int x, int y, int dmg) {
+ 		if (random.nextInt(100) == 0)
+ 			level.dropItem(x * 16 + 8, y * 16 + 8, Items.get("Apple"));
+-		
++
+ 		int damage = level.getData(x, y) + dmg;
+ 		int treeHealth = 20;
+ 		if (Game.isMode("Creative")) dmg = damage = treeHealth;
+-		
++
+ 		level.add(new SmashParticle(x*16, y*16));
+ 		Sound.monsterHurt.play();
+ 
+

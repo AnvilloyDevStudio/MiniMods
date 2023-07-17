@@ -1,5 +1,5 @@
---- a\minicraft\level\tile\WoolTile.java	2021-09-08 21:34:58.000000000 +0800
-+++ b\minicraft\level\tile\WoolTile.java	2022-09-13 19:33:39.664077100 +0800
+--- a\minicraft\level\tile\WoolTile.java
++++ b\minicraft\level\tile\WoolTile.java
 @@ -21,7 +21,7 @@
  		if (item instanceof ToolItem) {
  			ToolItem tool = (ToolItem) item;
@@ -9,3 +9,4 @@
  					level.setTile(xt, yt, Tiles.get("Hole"));
  					Sound.monsterHurt.play();
  					level.dropItem(xt * 16 + 8, yt * 16 + 8, Items.get(name));
+

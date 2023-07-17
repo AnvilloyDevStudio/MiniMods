@@ -1,6 +1,6 @@
---- a\minicraft\item\Recipe.java	2021-09-08 21:34:58.000000000 +0800
-+++ b\minicraft\item\Recipe.java	2022-12-27 01:52:07.212862700 +0800
-@@ -1,11 +1,17 @@
+--- a\minicraft\item\Recipe.java
++++ b\minicraft\item\Recipe.java
+@@ -1,46 +1,52 @@
  package minicraft.item;
  
 -import java.util.HashMap;
@@ -20,10 +20,95 @@
  	private HashMap<String, Integer> costs = new HashMap<String, Integer>();  // A list of costs for the recipe
  	private String product; // The result item of the recipe
  	private int amount;
-@@ -78,4 +84,197 @@
- 		
+ 	private boolean canCraft; // Checks if the player can craft the recipe
+-	
++
+ 	public Recipe(String createdItem, String... reqItems) {
+ 		canCraft = false;
+ 		String[] sep = createdItem.split("_");
+ 		product = sep[0].toUpperCase(); // Assigns the result item
+ 		amount = Integer.parseInt(sep[1]);
+-		
++
+ 		for (int i = 0; i < reqItems.length; i++) {
+-			 String[] curSep = reqItems[i].split("_");
+-			 String curItem = curSep[0].toUpperCase(); // The current cost that's being added to costs.
+-			 int amt = Integer.parseInt(curSep[1]);
+-			 boolean added = false;
+-			
++			String[] curSep = reqItems[i].split("_");
++			String curItem = curSep[0].toUpperCase(); // The current cost that's being added to costs.
++			int amt = Integer.parseInt(curSep[1]);
++			boolean added = false;
++
+ 			for (String cost: costs.keySet().toArray(new String[0])) { // Loop through the costs that have already been added
+-				 if (cost.equals(curItem)) {
+-					 costs.put(cost, costs.get(cost)+amt);
+-					 added = true;
+-					 break;
+-				 }
+-			 }
+-			
++				if (cost.equals(curItem)) {
++					costs.put(cost, costs.get(cost)+amt);
++					added = true;
++					break;
++				}
++			}
++
+ 			if (added) continue;
+ 			costs.put(curItem, amt);
+ 		}
+ 	}
+-	
++
+ 	public Item getProduct() {
+ 		return Items.get(product);
+ 	}
+ 	public HashMap<String, Integer> getCosts() { return costs; }
+-	
++
+ 	public int getAmount() { return amount; }
+ 	public boolean getCanCraft() { return canCraft; }
+ 	public boolean checkCanCraft(Player player) {
+@@ -50,32 +56,225 @@
+ 	/** Checks if the player can craft the recipe */
+ 	private boolean getCanCraft(Player player) {
+ 		if (Game.isMode("creative")) return true;
+-		
++
+ 		for (String cost: costs.keySet().toArray(new String[0])) { // Cycles through the costs list
+ 			/// This method ONLY WORKS if costs does not contain two elements such that inventory.count will count an item it contains as matching more than once.
+ 			if (player.getInventory().count(Items.get(cost)) < costs.get(cost)) {
+ 				return false;
+ 			}
+ 		}
+-		
++
  		return true;
  	}
+-	
++
+ 	// (WAS) abstract method given to the sub-recipe classes.
+ 	public boolean craft(Player player) {
+ 		if (!getCanCraft(player)) return false;
+-		
++
+ 		if (!Game.isMode("creative")) {
+ 			// Remove the cost items from the inventory.
+ 			for (String cost: costs.keySet().toArray(new String[0])) {
+ 				player.getInventory().removeItems(Items.get(cost), costs.get(cost));
+ 			}
+ 		}
+-		
++
+ 		// Rdd the crafted items.
+ 		for (int i = 0; i < amount; i++)
+ 			 player.getInventory().add(getProduct());
+-		
++
+ 		return true;
++	}
 +
 +	// This plan is deprecated.
 +	public static class RecipeCost {
@@ -216,5 +301,6 @@
 +		public int hashCode() {
 +			return 31 * (31 * (costs.hashCode() + items.hashCode()) + defaultAmount);
 +		}
-+	}
+ 	}
  }
+

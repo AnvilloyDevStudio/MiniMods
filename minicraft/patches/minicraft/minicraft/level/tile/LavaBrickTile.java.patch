@@ -1,6 +1,17 @@
---- a\minicraft\level\tile\LavaBrickTile.java	2021-09-08 21:34:58.000000000 +0800
-+++ b\minicraft\level\tile\LavaBrickTile.java	2022-09-13 19:29:30.107600400 +0800
-@@ -22,7 +22,7 @@
+--- a\minicraft\level\tile\LavaBrickTile.java
++++ b\minicraft\level\tile\LavaBrickTile.java
+@@ -13,16 +13,16 @@
+ 
+ public class LavaBrickTile extends Tile {
+ 	private static Sprite sprite = new Sprite(19, 2, 2, 2, 1);
+-	
++
+ 	protected LavaBrickTile(String name) {
+ 		super(name, sprite);
+ 	}
+-	
++
+ 	public boolean interact(Level level, int xt, int yt, Player player, Item item, Direction attackDir) {
  		if (item instanceof ToolItem) {
  			ToolItem tool = (ToolItem) item;
  			if (tool.type == ToolType.Pickaxe) {
@@ -9,3 +20,4 @@
  					level.setTile(xt, yt, Tiles.get("Lava"));
  					Sound.monsterHurt.play();
  					return true;
+

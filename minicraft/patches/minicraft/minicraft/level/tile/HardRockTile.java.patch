@@ -1,5 +1,19 @@
---- a\minicraft\level\tile\HardRockTile.java	2021-09-08 21:34:58.000000000 +0800
-+++ b\minicraft\level\tile\HardRockTile.java	2022-09-13 19:29:06.198596400 +0800
+--- a\minicraft\level\tile\HardRockTile.java
++++ b\minicraft\level\tile\HardRockTile.java
+@@ -21,11 +21,11 @@
+ public class HardRockTile extends Tile {
+ 	// Theoretically the full sprite should never be used, so we can use a placeholder
+ 	private static ConnectorSprite sprite = new ConnectorSprite(HardRockTile.class, new Sprite(18, 9, 3, 3, 1, 3), new Sprite(21, 10, 2, 2, 1, 3), Sprite.missingTexture(2, 2));
+-	
++
+ 	protected HardRockTile(String name) {
+ 		super(name, sprite);
+ 	}
+-	
++
+ 	public boolean mayPass(Level level, int x, int y, Entity e) {
+ 		return false;
+ 	}
 @@ -40,9 +40,9 @@
  			return false; // Go directly to hurt method
  		if (item instanceof ToolItem) {
@@ -13,3 +27,4 @@
  					return true;
  				}
  			} else {
+

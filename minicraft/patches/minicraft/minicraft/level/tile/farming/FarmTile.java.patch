@@ -1,5 +1,5 @@
---- a\minicraft\level\tile\farming\FarmTile.java	2021-09-08 21:34:58.000000000 +0800
-+++ b\minicraft\level\tile\farming\FarmTile.java	2022-09-13 19:34:16.437546400 +0800
+--- a\minicraft\level\tile\farming\FarmTile.java
++++ b\minicraft\level\tile\farming\FarmTile.java
 @@ -28,7 +28,7 @@
          if (item instanceof ToolItem) {
              ToolItem tool = (ToolItem) item;
@@ -9,3 +9,4 @@
                      level.setTile(xt, yt, Tiles.get("Dirt"));
                      Sound.monsterHurt.play();
                      return true;
+

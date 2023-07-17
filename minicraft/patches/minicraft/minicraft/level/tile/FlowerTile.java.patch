@@ -1,5 +1,35 @@
---- a\minicraft\level\tile\FlowerTile.java	2021-09-08 21:34:58.000000000 +0800
-+++ b\minicraft\level\tile\FlowerTile.java	2022-09-13 19:28:05.666107600 +0800
+--- a\minicraft\level\tile\FlowerTile.java
++++ b\minicraft\level\tile\FlowerTile.java
+@@ -15,7 +15,7 @@
+ 
+ public class FlowerTile extends Tile {
+ 	private static final Sprite flowerSprite = new Sprite(3, 8, 1);
+-	
++
+ 	protected FlowerTile(String name) {
+ 		super(name, (ConnectorSprite)null);
+ 		connectsToGrass = true;
+@@ -37,16 +37,16 @@
+ 		}
+ 		return false;
+ 	}
+-	
++
+ 	public void render(Screen screen, Level level, int x, int y) {
+ 		Tiles.get("Grass").render(screen, level, x, y);
+-		
++
+ 		int data = level.getData(x, y);
+ 		int shape = (data / 16) % 2;
+-		
++
+ 		x = x << 4;
+ 		y = y << 4;
+-		
++
+ 		flowerSprite.render(screen, x + 8 * shape, y);
+ 		flowerSprite.render(screen, x + 8 * (shape == 0 ? 1 : 0), y + 8);
+ 	}
 @@ -55,7 +55,7 @@
  		if (item instanceof ToolItem) {
  			ToolItem tool = (ToolItem) item;
@@ -9,3 +39,4 @@
  					level.setTile(x, y, Tiles.get("Grass"));
  					Sound.monsterHurt.play();
  					level.dropItem(x * 16 + 8, y * 16 + 8, Items.get("Flower"));
+

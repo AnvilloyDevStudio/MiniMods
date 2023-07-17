@@ -1,5 +1,14 @@
+import codechicken.diffpatch.DiffPatch
 import groovy.io.FileType
 import org.apache.commons.io.FileUtils
+
+import java.util.regex.Matcher
+
+buildscript {
+    dependencies {
+        classpath("net.minecraftforge:DiffPatch:2.+")
+    }
+}
 
 plugins {
     id 'java'
@@ -30,6 +39,38 @@ java {
     withSourcesJar()
 }
 
+tasks.register('patchGen') {
+    doLast {
+        def dir = file("patches/minicraft/")
+        def aDir = file("patches/a/")
+        def bDir = file("patches/b/")
+        def dirPatches = file("patches")
+        aDir.eachFileRecurse (FileType.FILES) { file ->
+            def diffDir = aDir.toPath().relativize(file.toPath())
+            println "Differing " + file.getPath()
+            def patchFile = dir.toPath().resolve(diffDir.toString() + ".patch")
+            DiffPatch.mainI(new String[] { "-o" , patchFile.toString() , "-d",
+                    aDir.toPath().resolve(diffDir.toString()).toString(), bDir.toPath().resolve(diffDir.toString()).toString() }, System.err, System.out)
+            def updatedContent = patchFile.getText("UTF-8").replaceFirst(Matcher.quoteReplacement(dirPatches.toPath().toString()+"\\"), "")
+                    .replaceFirst(Matcher.quoteReplacement(dirPatches.toPath().toString()+"\\"), "") // Remove redundant file paths
+            patchFile.write(updatedContent, "UTF-8")
+        }
+    }
+}
+
+tasks.register('patchSourceGen') {
+    doLast {
+        FileUtils.cleanDirectory(file("patches/a")) // Delete original files
+        copySpec {
+            from file("source/src/main/java/")
+            into file("patches/a")
+        }
+    }
+}
+
+tasks.register("patchRefresh")
+tasks.named("patchRefresh").get().finalizedBy tasks.named("patchGen").get(), tasks.named("patchSourceGen").get()
+
 sourceSets {
     main {
         java { // Getting all dirs.
@@ -45,38 +86,11 @@ sourceSets {
 
             dir.eachFileRecurse (FileType.FILES) { file ->
                 def patcherDir = dir.toPath().relativize(file.toPath()).toString()
+                patcherDir = patcherDir.substring(0, patcherDir.length() - 6) // Remove extension
 
                 println "Executing patcher for " + file.getPath()
-                exec {
-                    workingDir buildDir
-                    commandLine new File(projectDir, "patcher.bat").getPath(), file.getPath(), tmpDir.toPath().resolve(patcherDir.substring(0, patcherDir.length() - 6)).toFile().getPath()
-                }
-                // exec {
-                //     workingDir buildDir
-                //     // executable buildDir.toPath().resolve("../cmd-elevation.bat").toFile().getCanonicalPath()
-                //     // args"-Command",
-                //         // "\$pinfo = New-Object System.Diagnostics.ProcessStartInfo; " +
-                //         // "\$pinfo.FileName = Get-Command -Name patch; " +
-                //         // "\$pinfo.RedirectStandardError = \$true; " +
-                //         // "\$pinfo.RedirectStandardOutput = \$true; " +
-                //         // "\$pinfo.UseShellExecute = \$false; " +
-                //         // "\$pinfo.CreateNoWindow = \$true; " +
-                //         // "\$pinfo.Arguments = \'-l -p0 --forward -i \\\"${file.getPath()}\\\" \\\"${tmpDir.toPath().resolve(patcherDir.substring(0, patcherDir.length() - 6)).toFile().getPath()}\\\"\'; " +
-                //         // "\$p = New-Object System.Diagnostics.Process; " +
-                //         // "\$p.StartInfo = \$pinfo; " +
-                //         // "\$p.Start() | Out-Null; " +
-                //         // "\$p.WaitForExit(); " +
-                //         // "\$stdout = \$p.StandardOutput.ReadToEnd(); " +
-                //         // "\$stderr = \$p.StandardError.ReadToEnd(); " +
-                //         // "Write-Host \"stdout: \$stdout\"; " +
-                //         // "Write-Host \"stderr: \$stderr\"; " +
-                //         // "Write-Host \"exit code: \" + \$p.ExitCode"
-                //         // "Start-Process \'patch\' -ArgumentList  \'-l -p0 --forward -i \\\"${file.getPath()}\\\" \\\"${tmpDir.toPath().resolve(patcherDir.substring(0, patcherDir.length() - 6)).toFile().getPath()}\\\"\' -Verb runAs -Wait -RedirectStandardOutput \'${buildDir.toString()}\\tmp\\patches\\output.txt\'"
-                //     // args "patch", "-l", "-p0", "--forward", "-i", file.getPath(), tmpDir.toPath().resolve(patcherDir.substring(0, patcherDir.length() - 6)).toFile().getPath()
-                //     executable 'patch'
-                //     args "-l", "-p0", "--forward", "-i", file.getPath(), tmpDir.toPath().resolve(patcherDir.substring(0, patcherDir.length() - 6)).toFile().getPath()
-                // }
-                // ant.patch(patchfile: file, originalfile: tmpDir.toPath().resolve(patcherDir.substring(0, patcherDir.length() - 6)).toFile(), ignorewhitespace: true)
+                DiffPatch.mainI(new String[] { "-v" , "-s", "-o" , tmpDir.toPath().resolve(patcherDir).toString() , "-p",
+                        javaSrcDir.toPath().resolve(patcherDir).toString(), file.getPath() }, System.err, System.out)
             }
 
             srcDir tmpDir.getPath()

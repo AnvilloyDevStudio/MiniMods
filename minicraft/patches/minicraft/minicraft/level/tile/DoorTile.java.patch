@@ -1,5 +1,5 @@
---- a\minicraft\level\tile\DoorTile.java	2021-09-08 21:34:58.000000000 +0800
-+++ b\minicraft\level\tile\DoorTile.java	2022-09-13 19:27:00.942702000 +0800
+--- a\minicraft\level\tile\DoorTile.java
++++ b\minicraft\level\tile\DoorTile.java
 @@ -50,7 +50,7 @@
  		if (item instanceof ToolItem) {
  			ToolItem tool = (ToolItem) item;
@@ -9,3 +9,4 @@
  					level.setTile(xt, yt, Tiles.get(id + 3)); // Will get the corresponding floor tile.
  					Sound.monsterHurt.play();
  					level.dropItem(xt * 16 + 8, yt * 16 + 8, Items.get(type.name() + " Door"));
+

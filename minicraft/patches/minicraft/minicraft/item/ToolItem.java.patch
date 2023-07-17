@@ -1,5 +1,5 @@
---- a\minicraft\item\ToolItem.java	2021-09-08 21:34:58.000000000 +0800
-+++ b\minicraft\item\ToolItem.java	2022-09-13 19:44:12.317013500 +0800
+--- a\minicraft\item\ToolItem.java
++++ b\minicraft\item\ToolItem.java
 @@ -2,6 +2,8 @@
  
  import java.util.ArrayList;
@@ -9,7 +9,14 @@
  
  import minicraft.core.Game;
  import minicraft.core.io.Localization;
-@@ -16,7 +18,7 @@
+@@ -10,38 +12,44 @@
+ import minicraft.gfx.Sprite;
+ 
+ public class ToolItem extends Item {
+-	
++
+ 	protected static ArrayList<Item> getAllInstances() {
+ 		ArrayList<Item> items = new ArrayList<>();
  
  		for (ToolType tool : ToolType.values()) {
  			if (!tool.noLevel) {
@@ -18,11 +25,19 @@
  					items.add(new ToolItem(tool, lvl));
  			} else {
  				items.add(new ToolItem(tool));
-@@ -28,20 +30,26 @@
- 	
+ 			}
+ 		}
+-		
++
+ 		return items;
+ 	}
+-	
++
  	private Random random = new Random();
- 	
+-	
 -	public static final String[] LEVEL_NAMES = {"Wood", "Rock", "Iron", "Gold", "Gem"}; // The names of the different levels. A later level means a stronger tool.
+-	
++
 +	public static final HashMap<String, Integer> LEVELS = new HashMap<String, Integer>() {{
 +		put("Wood", 0);
 +		put("Rock", 1);
@@ -30,30 +45,35 @@
 +		put("Gold", 3);
 +		put("Gem", 4);
 +	}}; // The names of the different levels. A later level means a stronger tool.
- 	
++
  	public ToolType type; // Type of tool (Sword, hoe, axe, pickaxe, shovel)
 -	public int level; // Level of said tool
 +	public String level; // Level of said tool
  	public int dur; // The durability of the tool
- 	
+-	
++
  	/** Tool Item, requires a tool type (ToolType.Sword, ToolType.Axe, ToolType.Hoe, etc) and a level (0 = wood, 2 = iron, 4 = gem, etc) */
 -	public ToolItem(ToolType type, int level) {
 -		super(LEVEL_NAMES[level] + " " + type.name(), new Sprite(type.xPos, type.yPos + level, 0));
+-		
 +	public ToolItem(ToolType type, String level) {
 +		super(level + " " + type.name(), new Sprite(type.xPos, type.yPos + LEVELS.get(level), 0));
- 		
++
  		this.type = type;
  		this.level = level;
- 		
+-		
 -		dur = type.durability * (level + 1); // Initial durability fetched from the ToolType
++
 +		dur = type.durability * (LEVELS.get(level) + 1); // Initial durability fetched from the ToolType
  	}
  
  	public ToolItem(ToolType type) {
-@@ -51,10 +59,16 @@
+@@ -50,55 +58,61 @@
+ 		this.type = type;
  		dur = type.durability;
  	}
- 	
+-	
++
 +	/** Uses this method for sprite customization. */
 +	public ToolItem setSprite(Sprite sprite) {
 +		this.sprite = sprite;
@@ -67,9 +87,32 @@
 +		if (!type.noLevel) return " " + Localization.getLocalized(level) + " " + Localization.getLocalized(type.toString());
  		else return " " + Localization.getLocalized(type.toString());
  	}
- 	
-@@ -80,13 +94,13 @@
- 		
+-	
++
+ 	public boolean isDepleted() {
+ 		return dur <= 0 && type.durability > 0;
+ 	}
+-	
++
+ 	/** You can attack mobs with tools. */
+ 	public boolean canAttack() {
+ 		return type != ToolType.Shear;
+ 	}
+-	
++
+ 	public boolean payDurability() {
+ 		if (dur <= 0) return false;
+ 		if (!Game.isMode("creative")) dur--;
+ 		return true;
+ 	}
+-	
++
+ 	/** Gets the attack damage bonus from an item/tool (sword/axe) */
+ 	public int getAttackDamageBonus(Entity e) {
+ 		if (!payDurability())
+ 			return 0;
+-		
++
  		if (e instanceof Mob) {
  			if (type == ToolType.Axe) {
 -				return (level + 1) * 2 + random.nextInt(4); // Wood axe damage: 2-5; gem axe damage: 10-13.
@@ -85,12 +128,33 @@
  			}
  			return 1; // All other tools do very little damage to mobs.
  		}
-@@ -110,7 +124,7 @@
+-		
++
+ 		return 0;
  	}
- 	
+-	
++
+ 	@Override
+ 	public String getData() {
+ 		return super.getData() + "_" + dur;
+ 	}
+-	
++
+ 	/** Sees if this item equals another. */
+ 	@Override
+ 	public boolean equals(Item item) {
+@@ -108,10 +122,10 @@
+ 		}
+ 		return false;
+ 	}
+-	
++
  	@Override
 -	public int hashCode() { return type.name().hashCode() + level; }
+-	
 +	public int hashCode() { return type.name().hashCode() + level.hashCode(); }
- 	
++
  	public ToolItem clone() {
  		ToolItem ti;
+ 		if (type.noLevel) {
+
