@@ -15,10 +15,8 @@ mainClassName = 'io.github.anvilloystudio.minimods.loader.LoaderInitialization'
 
 repositories {
     mavenCentral()
-
-    maven {
-        url "https://nexus.velocitypowered.com/repository/maven-public/"
-    }
+    maven { url "https://nexus.velocitypowered.com/repository/maven-public/" }
+    maven { url = 'https://maven.minecraftforge.net/' }
 }
 
 dependencies {

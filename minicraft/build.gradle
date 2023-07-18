@@ -5,6 +5,9 @@ import org.apache.commons.io.FileUtils
 import java.util.regex.Matcher
 
 buildscript {
+    repositories {
+        maven { url = 'https://maven.minecraftforge.net/' }
+    }
     dependencies {
         classpath("net.minecraftforge:DiffPatch:2.+")
     }
@@ -89,7 +92,7 @@ sourceSets {
                 patcherDir = patcherDir.substring(0, patcherDir.length() - 6) // Remove extension
 
                 println "Executing patcher for " + file.getPath()
-                DiffPatch.mainI(new String[] { "-v" , "-s", "-o" , tmpDir.toPath().resolve(patcherDir).toString() , "-p",
+                DiffPatch.mainI(new String[] { "-o" , tmpDir.toPath().resolve(patcherDir).toString() , "-p",
                         javaSrcDir.toPath().resolve(patcherDir).toString(), file.getPath() }, System.err, System.out)
             }
 
