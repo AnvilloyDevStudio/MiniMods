@@ -9,3 +9,6 @@
 [submodule "mod-core-redstone-extra"]
 	path = mods/core-redstone-extra
 	url = ../Mod-Core-Redstone-Extra
+[submodule "minicraft/source"]
+	path = minicraft/source
+	url = https://github.com/MinicraftPlus/minicraft-plus-revived.git

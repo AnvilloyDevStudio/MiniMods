@@ -29,14 +29,14 @@ public class SandTile extends Tile {
 	{
 		public boolean connectsTo(Tile tile, boolean isSide) {
 			if(!isSide) return true;
-			return tile.connectsToSand;
+			return tile.connections.contains(TileConnections.TileConnectionType.SAND);
 		}
 	};
 
-	protected SandTile(String name) {
+	public SandTile(String name) {
 		super(name, (ConnectorSprite)null);
 		csprite = sprite;
-		connectsToSand = true;
+		connections.add(TileConnections.TileConnectionType.SAND);
 		maySpawn = true;
 	}
 

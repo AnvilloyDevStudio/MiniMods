@@ -8,7 +8,8 @@
 +
  	protected TreeTile(String name) {
  		super(name, (ConnectorSprite)null);
- 		connectsToGrass = true;
+-		connectsToGrass = true;
++		connections.add(TileConnections.TileConnectionType.GRASS);
  	}
 -	
 +

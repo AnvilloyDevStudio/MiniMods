@@ -1,24 +1,23 @@
 package io.github.anvilloystudio.minimods.coremods.mixins;
 
-import javax.swing.JFrame;
-
+import minicraft.core.Initializer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-import minicraft.core.Initializer;
+import javax.swing.JFrame;
 
 @Mixin(Initializer.class)
 public interface InitializerMixin {
 	@Accessor(value = "frame", remap = false)
-	public static JFrame getFrame() {
+	static JFrame getFrame() {
 		throw new AssertionError();
 	}
 	@Accessor(value = "fra", remap = false)
-	public static int getFra() {
+	static int getFra() {
 		throw new AssertionError();
 	}
 	@Accessor(value = "tik", remap = false)
-	public static int getTik() {
+	static int getTik() {
 		throw new AssertionError();
 	}
 }

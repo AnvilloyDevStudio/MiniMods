@@ -1,6 +1,6 @@
 --- a\minicraft\level\tile\FlowerTile.java
 +++ b\minicraft\level\tile\FlowerTile.java
-@@ -15,7 +15,7 @@
+@@ -15,10 +15,10 @@
  
  public class FlowerTile extends Tile {
  	private static final Sprite flowerSprite = new Sprite(3, 8, 1);
@@ -8,7 +8,11 @@
 +
  	protected FlowerTile(String name) {
  		super(name, (ConnectorSprite)null);
- 		connectsToGrass = true;
+-		connectsToGrass = true;
++		connections.add(TileConnections.TileConnectionType.GRASS);
+ 		maySpawn = true;
+ 	}
+ 
 @@ -37,16 +37,16 @@
  		}
  		return false;

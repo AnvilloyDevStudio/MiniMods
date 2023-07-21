@@ -16,9 +16,9 @@ import minicraft.level.Level;
 public class FlowerTile extends Tile {
 	private static final Sprite flowerSprite = new Sprite(3, 8, 1);
 
-	protected FlowerTile(String name) {
+	public FlowerTile(String name) {
 		super(name, (ConnectorSprite)null);
-		connectsToGrass = true;
+		connections.add(TileConnections.TileConnectionType.GRASS);
 		maySpawn = true;
 	}
 

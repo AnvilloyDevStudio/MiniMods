@@ -1,11 +1,10 @@
 package io.github.anvilloystudio.minimods.coremods;
 
 import io.github.anvilloystudio.minimods.api.ModProcedure;
-import io.github.anvilloystudio.minimods.api.interfaces.Tickable;
 import io.github.anvilloystudio.minimods.core.Mods;
+import io.github.anvilloystudio.minimods.coremods.interfaces.Tickable;
 import io.github.anvilloystudio.minimods.coremods.mixins.InitializerMixin;
-import io.github.anvilloystudio.minimods.coremods.mixins.LevelMixin;
-import io.github.anvilloystudio.minimods.coremods.mixins.PlayerMixin;
+import io.github.anvilloystudio.minimods.coremods.mixins.PlayerAccessorMixin;
 import minicraft.core.Game;
 import minicraft.core.Initializer;
 import minicraft.core.Renderer;
@@ -156,7 +155,7 @@ public class ExternalDebugPanel {
 				infoRight.add("Targeted Tile: " + tile + " data: " + tileData);
 			} catch (NullPointerException e) {}
 
-			List<Entity> targetEntities = Game.player.getLevel().getEntitiesInRect(((PlayerMixin) Game.player).invokeGetInteractionBox(Player.INTERACT_DIST));
+			List<Entity> targetEntities = Game.player.getLevel().getEntitiesInRect(((PlayerAccessorMixin) Game.player).invokeGetInteractionBox(Player.INTERACT_DIST));
 			for (Entity e : targetEntities) {
 				infoRight.add("Targeted Entity: " + e);
 			}

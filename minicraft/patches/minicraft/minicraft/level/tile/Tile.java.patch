@@ -1,6 +1,27 @@
 --- a\minicraft\level\tile\Tile.java
 +++ b\minicraft\level\tile\Tile.java
-@@ -21,7 +21,7 @@
+@@ -1,7 +1,5 @@
+ package minicraft.level.tile;
+ 
+-import java.util.Random;
+-
+ import minicraft.core.World;
+ import minicraft.entity.Direction;
+ import minicraft.entity.Entity;
+@@ -14,6 +12,12 @@
+ import minicraft.item.ToolType;
+ import minicraft.level.Level;
+ 
++import javax.security.auth.Destroyable;
++import java.util.Arrays;
++import java.util.HashMap;
++import java.util.HashSet;
++import java.util.Random;
++
+ public abstract class Tile {
+ 	public static int tickCount = 0; // A global tickCount used in the Lava & water tiles.
+ 	protected Random random = new Random();
+@@ -21,7 +25,7 @@
  	/**
  	 * This is used by wall tiles to get what material they're made of.
  	 */
@@ -9,7 +30,7 @@
  		Wood(ToolType.Axe),
  		Stone(ToolType.Pickaxe),
  		Obsidian(ToolType.Pickaxe);
-@@ -37,27 +37,27 @@
+@@ -37,27 +41,73 @@
  			return requiredTool;
  		}
  	}
@@ -20,10 +41,59 @@
 +
  	public byte id;
 -	
+-	public boolean connectsToGrass = false;
+-	public boolean connectsToSand = false;
+-	public boolean connectsToFluid = false;
 +
- 	public boolean connectsToGrass = false;
- 	public boolean connectsToSand = false;
- 	public boolean connectsToFluid = false;
++	public TileConnections connections = new TileConnections();
++
++	public static class TileConnections extends HashSet<TileConnections.TileConnectionType> {
++		public TileConnections(TileConnectionType... connectionTypes) {
++			addAll(Arrays.asList(connectionTypes));
++		}
++
++		public static class TileConnectionType implements Destroyable {
++			private static final HashMap<String, TileConnectionType> registry = new HashMap<>();
++
++			private static void removeRegistry(String key) {
++				registry.remove(key);
++			}
++			private static void addRegistry(TileConnectionType val) {
++				TileConnectionType oldVal;
++				if ((oldVal = registry.replace(val.key, val)) != null) {
++					oldVal.destroy();
++					System.out.println("[TILES] WARN: TileConnectionType registry replaced: " + val.key);
++				}
++			}
++
++			public static final TileConnectionType GRASS = new TileConnectionType("GRASS");
++			public static final TileConnectionType SAND = new TileConnectionType("SAND");
++			public static final TileConnectionType FLUID = new TileConnectionType("FLUID");
++
++			public final String key;
++
++			private boolean destroyed = false;
++
++			public TileConnectionType(String key) {
++				this.key = key.toUpperCase();
++				addRegistry(this);
++			}
++
++			@Override
++			public void destroy() {
++				if (!destroyed) {
++					removeRegistry(key);
++					destroyed = true;
++				}
++			}
++
++			@Override
++			public boolean isDestroyed() {
++				return destroyed;
++			}
++		}
++	}
++
  	public int light;
  	protected boolean maySpawn;
 -	
@@ -43,7 +113,7 @@
  	protected Tile(String name, Sprite sprite) {
  		this.name = name.toUpperCase();
  		this.sprite = sprite;
-@@ -67,14 +67,14 @@
+@@ -67,14 +117,14 @@
  		csprite = sprite;
  	}
  
@@ -60,7 +130,7 @@
  	/** Render method, used in sub-classes */
  	public void render(Screen screen, Level level, int x, int y) {
  		if (sprite != null)
-@@ -82,9 +82,9 @@
+@@ -82,9 +132,9 @@
  		if (csprite != null)
  			csprite.render(screen, level, x, y);
  	}
@@ -72,7 +142,7 @@
  	/** Returns if the player can walk on it, overrides in sub-classes  */
  	public boolean mayPass(Level level, int x, int y, Entity e) {
  		return true;
-@@ -115,13 +115,13 @@
+@@ -115,13 +165,13 @@
  	 * @param dmg The damage taken.
  	 */
  	public void hurt(Level level, int x, int y, int dmg) {}
@@ -89,20 +159,21 @@
  	/** What happens when you are inside the tile (ex: lava) */
  	public void steppedOn(Level level, int xt, int yt, Entity entity) {}
  
-@@ -138,10 +138,10 @@
+@@ -138,10 +188,10 @@
  	public boolean interact(Level level, int xt, int yt, Player player, Item item, Direction attackDir) {
  		return false;
  	}
 -	
 +
  	/** Sees if the tile connects to a fluid. */
- 	public boolean connectsToLiquid() { return connectsToFluid; }
+-	public boolean connectsToLiquid() { return connectsToFluid; }
 -	
++	public boolean connectsToLiquid() { return connections.contains(TileConnections.TileConnectionType.FLUID); }
 +
  	public int getData(String data) {
  		try {
  			return Integer.parseInt(data);
-@@ -149,38 +149,38 @@
+@@ -149,38 +199,38 @@
  			return 0;
  		}
  	}

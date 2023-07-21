@@ -14,14 +14,16 @@ public class FloorTile extends Tile {
 	protected Material type;
 	private Sprite sprite;
 
-	protected FloorTile(Material type) {
-		super((type == Material.Wood ? "Wood Planks" : type == Material.Obsidian ? "Obsidian" : type.name() + " Bricks"), (Sprite) null);
+	public FloorTile(Material type) {
+		super((type == Material.Wood ? "Wood Planks" : type == Material.Obsidian ? "Obsidian" : type.name + " Bricks"), (Sprite) null);
 		this.type = type;
 		maySpawn = true;
-		switch (type) {
-			case Wood: sprite = new Sprite(5, 14, 2, 2, 1, 0); break;
-			case Stone: sprite = new Sprite(15, 14, 2, 2, 1, 0); break;
-			case Obsidian: sprite = new Sprite(25, 14, 2, 2, 1, 0); break;
+		if (type == Material.Wood) {
+			sprite = new Sprite(5, 14, 2, 2, 1, 0);
+		} else if (type == Material.Stone) {
+			sprite = new Sprite(15, 14, 2, 2, 1, 0);
+		} else if (type == Material.Obsidian) {
+			sprite = new Sprite(25, 14, 2, 2, 1, 0);
 		}
 		super.sprite = sprite;
 	}
@@ -37,9 +39,10 @@ public class FloorTile extends Tile {
 						level.setTile(xt, yt, Tiles.get("Hole"));
 					}
 					Item drop;
-					switch (type) {
-						case Wood: drop = Items.get("Plank"); break;
-						default: drop = Items.get(type.name() + " Brick"); break;
+					if (type == Material.Wood) {
+						drop = Items.get("Plank");
+					} else {
+						drop = Items.get(type.name + " Brick");
 					}
 					Sound.monsterHurt.play();
 					level.dropItem(xt * 16 + 8, yt * 16 + 8, drop);

@@ -19,9 +19,9 @@ import minicraft.level.Level;
 
 public class TreeTile extends Tile {
 
-	protected TreeTile(String name) {
+	public TreeTile(String name) {
 		super(name, (ConnectorSprite)null);
-		connectsToGrass = true;
+		connections.add(TileConnections.TileConnectionType.GRASS);
 	}
 
 	public void render(Screen screen, Level level, int x, int y) {

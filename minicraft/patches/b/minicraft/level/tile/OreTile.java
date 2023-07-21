@@ -17,21 +17,44 @@ import minicraft.item.ToolItem;
 import minicraft.item.ToolType;
 import minicraft.level.Level;
 
+import java.util.HashMap;
+
 /// this is all the spikey stuff (except "cloud cactus")
 public class OreTile extends Tile {
 	private Sprite sprite;
 	private OreType type;
 
-	public enum OreType {
-        Iron (Items.get("Iron Ore"), 0),
-		Lapis (Items.get("Lapis"), 2),
-		Gold (Items.get("Gold Ore"), 4),
-		Gem (Items.get("Gem"), 6);
+	public static class OreType {
+		private static final HashMap<String, OreType> registry = new HashMap<>();
 
-		private Item drop;
+		public static void removeRegistry(OreType val) {
+			registry.remove(val.key, val);
+		}
+		public static OreType getRegistry(String key) {
+			return registry.get(key);
+		}
+		public static void addRegistry(OreType val) {
+			if (registry.put(val.key, val) != null) {
+				System.out.println("[TILES] WARN: OreType registry replaced: " + val.key);
+			}
+		}
+		public static OreType register(OreType val) {
+			addRegistry(val);
+			return val;
+		}
+
+		public static final OreType Iron = register(new OreType("IRON", "Iron", Items.get("Iron Ore"), 0));
+		public static final OreType Lapis = register(new OreType("LAPIS", "Lapis", Items.get("Lapis"), 2));
+		public static final OreType Gold = register(new OreType("GOLD", "Gold", Items.get("Gold Ore"), 4));
+		public static final OreType Gem = register(new OreType("GEM", "Gem", Items.get("Gem"), 6));
+
+		public final String key, name;
+		private final Item drop;
 		public final int color;
 
-		OreType(Item drop, int color) {
+		public OreType(String key, String name, Item drop, int color) {
+			this.key = key;
+			this.name = name;
 			this.drop = drop;
 			this.color = color;
 		}
@@ -41,8 +64,9 @@ public class OreTile extends Tile {
 		}
     }
 
-	protected OreTile(OreType o) {
-		super((o == OreTile.OreType.Lapis ? "Lapis" : o.name() + " Ore"), new Sprite(24 + o.color, 0, 2, 2, 1));
+	public OreTile(OreType o) { this(o, new Sprite(24 + o.color, 0, 2, 2, 1)); }
+	public OreTile(OreType o, Sprite sprite) {
+		super((o == OreTile.OreType.Lapis ? "Lapis" : o.name + " Ore"), sprite);
         this.type = o;
 		this.sprite = super.sprite;
 	}

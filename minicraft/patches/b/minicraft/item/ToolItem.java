@@ -1,22 +1,21 @@
 package minicraft.item;
 
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.HashMap;
-import java.util.Map;
-
 import minicraft.core.Game;
 import minicraft.core.io.Localization;
 import minicraft.entity.Entity;
 import minicraft.entity.mob.Mob;
 import minicraft.gfx.Sprite;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
+
 public class ToolItem extends Item {
 
 	protected static ArrayList<Item> getAllInstances() {
 		ArrayList<Item> items = new ArrayList<>();
 
-		for (ToolType tool : ToolType.values()) {
+		for (ToolType tool : ToolType.getRegistries()) {
 			if (!tool.noLevel) {
 				for (String lvl : LEVELS.keySet())
 					items.add(new ToolItem(tool, lvl));
@@ -36,15 +35,16 @@ public class ToolItem extends Item {
 		put("Iron", 2);
 		put("Gold", 3);
 		put("Gem", 4);
-	}}; // The names of the different levels. A later level means a stronger tool.
+	}};
 
 	public ToolType type; // Type of tool (Sword, hoe, axe, pickaxe, shovel)
 	public String level; // Level of said tool
 	public int dur; // The durability of the tool
 
 	/** Tool Item, requires a tool type (ToolType.Sword, ToolType.Axe, ToolType.Hoe, etc) and a level (0 = wood, 2 = iron, 4 = gem, etc) */
-	public ToolItem(ToolType type, String level) {
-		super(level + " " + type.name(), new Sprite(type.xPos, type.yPos + LEVELS.get(level), 0));
+	public ToolItem(ToolType type, String level) { this(type, level, new Sprite(type.xPos, type.yPos + LEVELS.get(level), 0)); }
+	public ToolItem(ToolType type, String level, Sprite sprite) {
+		super(level + " " + type.name, sprite);
 
 		this.type = type;
 		this.level = level;
@@ -52,8 +52,9 @@ public class ToolItem extends Item {
 		dur = type.durability * (LEVELS.get(level) + 1); // Initial durability fetched from the ToolType
 	}
 
-	public ToolItem(ToolType type) {
-		super(type.name(), new Sprite(type.xPos, type.yPos, 0));
+	public ToolItem(ToolType type) { this(type, new Sprite(type.xPos, type.yPos, 0)); }
+	public ToolItem(ToolType type, Sprite sprite) {
+		super(type.name, sprite);
 
 		this.type = type;
 		dur = type.durability;
@@ -124,7 +125,7 @@ public class ToolItem extends Item {
 	}
 
 	@Override
-	public int hashCode() { return type.name().hashCode() + level.hashCode(); }
+	public int hashCode() { return type.name.hashCode() + level.hashCode(); }
 
 	public ToolItem clone() {
 		ToolItem ti;

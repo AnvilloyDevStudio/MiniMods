@@ -1,16 +1,6 @@
 package minicraft.core;
 
-import java.awt.Canvas;
-import java.awt.Graphics;
-import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Map;
-
-import javax.imageio.ImageIO;
-
+import io.github.anvilloystudio.minimods.api.ModProcedure;
 import minicraft.entity.furniture.Bed;
 import minicraft.entity.mob.Player;
 import minicraft.gfx.Color;
@@ -29,6 +19,16 @@ import minicraft.level.Level;
 import minicraft.saveload.Load;
 import minicraft.screen.LoadingDisplay;
 import minicraft.screen.RelPos;
+
+import javax.imageio.ImageIO;
+import java.awt.Canvas;
+import java.awt.Graphics;
+import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class Renderer extends Game {
 	private Renderer() {}
@@ -117,6 +117,7 @@ public class Renderer extends Game {
 		if (menu != null) // Renders menu, if present.
 			menu.render(screen);
 
+		ModProcedure.displays2.forEach(d -> d.render(screen));
 		if (!canvas.hasFocus() && !ISONLINE) renderFocusNagger(); // Calls the renderFocusNagger() method, which creates the "Click to Focus" message.
 
 
@@ -347,6 +348,7 @@ public class Renderer extends Game {
 			}
 		}
 
+		ModProcedure.displays0.forEach(d -> d.render(screen));
 		renderDebugInfo();
 	}
 
@@ -406,6 +408,7 @@ public class Renderer extends Game {
 			} else
 				style.setYPos(2);
 			Font.drawParagraph(info, screen, style, 2);
+			ModProcedure.displays1.forEach(d -> d.render(screen));
 		}
 	}
 

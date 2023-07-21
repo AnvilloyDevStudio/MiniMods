@@ -29,7 +29,7 @@ public class RockTile extends Tile {
 
 	private int damage;
 
-	protected RockTile(String name) {
+	public RockTile(String name) {
 		super(name, (ConnectorSprite)null);
 		csprite = sprite;
 	}

@@ -17,25 +17,18 @@ public class DoorTile extends Tile {
 	private Sprite closedSprite;
 	private Sprite openSprite;
 
-	protected DoorTile(Material type) {
-		super(type.name() + " Door", (Sprite) null);
+	public DoorTile(Material type) {
+		super(type.name + " Door", (Sprite) null);
 		this.type = type;
-		switch (type) {
-			case Wood: {
-				closedSprite = new Sprite(5, 16, 2, 2, 1);
-				openSprite = new Sprite(3, 16, 2, 2, 1);
-				break;
-			}
-			case Stone: {
-				closedSprite = new Sprite(15, 16, 2, 2, 1);
-				openSprite = new Sprite(13, 16, 2, 2, 1);
-				break;
-			}
-			case Obsidian: {
-				closedSprite = new Sprite(25, 16, 2, 2, 1);
-				openSprite = new Sprite(23, 16, 2, 2, 1);
-				break;
-			}
+		if (type == Material.Wood) {
+			closedSprite = new Sprite(5, 16, 2, 2, 1);
+			openSprite = new Sprite(3, 16, 2, 2, 1);
+		} else if (type == Material.Stone) {
+			closedSprite = new Sprite(15, 16, 2, 2, 1);
+			openSprite = new Sprite(13, 16, 2, 2, 1);
+		} else if (type == Material.Obsidian) {
+			closedSprite = new Sprite(25, 16, 2, 2, 1);
+			openSprite = new Sprite(23, 16, 2, 2, 1);
 		}
 		sprite = closedSprite;
 	}
@@ -53,7 +46,7 @@ public class DoorTile extends Tile {
 				if (player.payStamina(4 - ToolItem.LEVELS.get(tool.level)) && tool.payDurability()) {
 					level.setTile(xt, yt, Tiles.get(id + 3)); // Will get the corresponding floor tile.
 					Sound.monsterHurt.play();
-					level.dropItem(xt * 16 + 8, yt * 16 + 8, Items.get(type.name() + " Door"));
+					level.dropItem(xt * 16 + 8, yt * 16 + 8, Items.get(type.name + " Door"));
 					return true;
 				}
 			}

@@ -17,7 +17,7 @@ repositories {
 
 dependencies {
     implementation 'org.jetbrains:annotations:21.0.1'
-    // implementation 'org.xbill:dns:2.0.8'
+    implementation 'org.xbill:dns:2.0.8'
     implementation 'commons-codec:commons-codec:1.15'
     implementation 'commons-io:commons-io:2.4'
     implementation 'commons-logging:commons-logging:1.2'
@@ -33,9 +33,6 @@ dependencies {
     implementation 'org.apache.xmlgraphics:xmlgraphics-commons:2.6'
     testImplementation 'org.hamcrest:hamcrest:2.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
-}
-java {
-    withSourcesJar()
 }
 
 buildscript {

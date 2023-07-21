@@ -1,0 +1,27 @@
+--- a\minicraft\level\tile\ExplodedTile.java
++++ b\minicraft\level\tile\ExplodedTile.java
+@@ -14,18 +14,18 @@
+ 			return !isSide || tile.connectsToLiquid();
+ 		}
+ 	};
+-	
++
+ 	protected ExplodedTile(String name) {
+ 		super(name, sprite);
+-		connectsToSand = true;
+-		connectsToFluid = true;
++		connections.add(TileConnections.TileConnectionType.SAND);
++		connections.add(TileConnections.TileConnectionType.FLUID);
+ 	}
+-	
++
+ 	public void steppedOn(Level level, int x, int y, Entity entity) {
+ 		if (entity instanceof Mob)
+ 			((Mob)entity).hurt(this, x, y, 50);
+ 	}
+-	
++
+ 	public boolean mayPass(Level level, int x, int y, Entity e) {
+ 		return true;
+ 	}
+

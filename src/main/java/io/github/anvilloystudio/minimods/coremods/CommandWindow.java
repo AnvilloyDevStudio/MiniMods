@@ -2,9 +2,7 @@ package io.github.anvilloystudio.minimods.coremods;
 
 import io.github.anvilloystudio.minimods.api.ConsoleColors;
 import io.github.anvilloystudio.minimods.api.ModProcedure;
-import io.github.anvilloystudio.minimods.api.Vector2;
 import io.github.anvilloystudio.minimods.coremods.mixins.InitializerMixin;
-import io.github.anvilloystudio.minimods.coremods.mixins.LevelMixin;
 import minicraft.core.Action;
 import minicraft.core.Game;
 import minicraft.core.Initializer;

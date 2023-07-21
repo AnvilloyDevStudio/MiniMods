@@ -53,7 +53,7 @@ tasks.register('patchGen') {
             println "Differing " + file.getPath()
             def patchFile = dir.toPath().resolve(diffDir.toString() + ".patch")
             DiffPatch.mainI(new String[] { "-o" , patchFile.toString() , "-d",
-                    aDir.toPath().resolve(diffDir.toString()).toString(), bDir.toPath().resolve(diffDir.toString()).toString() }, System.err, System.out)
+                    aDir.toPath().resolve(diffDir).toString(), bDir.toPath().resolve(diffDir).toString() }, System.err, System.out)
             def updatedContent = patchFile.getText("UTF-8").replaceFirst(Matcher.quoteReplacement(dirPatches.toPath().toString()+"\\"), "")
                     .replaceFirst(Matcher.quoteReplacement(dirPatches.toPath().toString()+"\\"), "") // Remove redundant file paths
             patchFile.write(updatedContent, "UTF-8")
@@ -64,9 +64,16 @@ tasks.register('patchGen') {
 tasks.register('patchSourceGen') {
     doLast {
         FileUtils.cleanDirectory(file("patches/a")) // Delete original files
-        copySpec {
-            from file("source/src/main/java/")
-            into file("patches/a")
+        def dir = file("source/src/main/java/")
+        def aDir = file("patches/a/")
+        def bDir = file("patches/b/")
+        bDir.eachFileRecurse (FileType.FILES) { file ->
+            def diffDir = bDir.toPath().relativize(file.toPath())
+            if (!diffDir.startsWith("minicraft")) return
+            copy {
+                from dir.toPath().resolve(diffDir).toFile()
+                into aDir.toPath().resolve(diffDir.parent).toFile()
+            }
         }
     }
 }
@@ -109,14 +116,7 @@ tasks.distTar.doFirst {
     duplicatesStrategy = DuplicatesStrategy.WARN
 }
 
-shadowJar { // Copying this part from source build.gradle.
+shadowJar {
     archivesBaseName = 'minicraft_plus'
     archiveClassifier.set('')
-
-    manifest {
-        attributes('Main-Class': mainClassName,
-                'Implementation-Title': project.name,
-                'Implementation-Version': project.version,
-                'SplashScreen-Image': "Minicraft_Splash_Screen_3.png")
-    }
 }

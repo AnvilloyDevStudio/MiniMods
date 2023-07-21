@@ -1,7 +1,5 @@
 package minicraft.level.tile;
 
-import java.util.Random;
-
 import minicraft.core.World;
 import minicraft.entity.Direction;
 import minicraft.entity.Entity;
@@ -14,6 +12,12 @@ import minicraft.item.Item;
 import minicraft.item.ToolType;
 import minicraft.level.Level;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
+
 public abstract class Tile {
 	public static int tickCount = 0; // A global tickCount used in the Lava & water tiles.
 	protected Random random = new Random();
@@ -21,15 +25,41 @@ public abstract class Tile {
 	/**
 	 * This is used by wall tiles to get what material they're made of.
 	 */
-	public enum Material {
-		Wood(ToolType.Axe),
-		Stone(ToolType.Pickaxe),
-		Obsidian(ToolType.Pickaxe);
+	public static class Material {
+		private static final HashMap<String, Material> registry = new HashMap<>();
 
-		public static final Material[] values = Material.values();
+		public static void removeRegistry(Material val) {
+			registry.remove(val.key, val);
+		}
+		public static Material getRegistry(String key) {
+			return registry.get(key);
+		}
+		public static void addRegistry(Material val) {
+			if (registry.put(val.key, val) != null) {
+				System.out.println("[TILES] WARN: Tile$Material registry replaced: " + val.key);
+			}
+		}
+		public static Material register(Material val) {
+			addRegistry(val);
+			return val;
+		}
+
+		public static Set<Material> getRegistries() {
+			return new HashSet<>(registry.values());
+		}
+
+		public static final Material Wood = register(new Material("WOOD", "Wood", 0, ToolType.Axe));
+		public static final Material Stone = register(new Material("STONE", "Stone", 1, ToolType.Pickaxe));
+		public static final Material Obsidian = register(new Material("OBSIDIAN", "Obsidian", 2, ToolType.Pickaxe));
+
+		public final String key, name;
+		public final int id;
 		private final ToolType requiredTool;
 
-		Material(ToolType requiredTool) {
+		public Material(String key, String name, int id, ToolType requiredTool) {
+			this.key = key;
+			this.name = name;
+			this.id = id;
 			this.requiredTool = requiredTool;
 		}
 
@@ -42,9 +72,44 @@ public abstract class Tile {
 
 	public byte id;
 
-	public boolean connectsToGrass = false;
-	public boolean connectsToSand = false;
-	public boolean connectsToFluid = false;
+	public TileConnections connections = new TileConnections();
+
+	public static class TileConnections extends HashSet<TileConnections.TileConnectionType> {
+		public TileConnections(TileConnectionType... connectionTypes) {
+			addAll(Arrays.asList(connectionTypes));
+		}
+
+		public static class TileConnectionType {
+			private static final HashMap<String, TileConnectionType> registry = new HashMap<>();
+
+			public static void removeRegistry(TileConnectionType val) {
+				registry.remove(val.key, val);
+			}
+			public static TileConnectionType getRegistry(String key) {
+				return registry.get(key);
+			}
+			public static void addRegistry(TileConnectionType val) {
+				if (registry.put(val.key, val) != null) {
+					System.out.println("[TILES] WARN: TileConnectionType registry replaced: " + val.key);
+				}
+			}
+			public static TileConnectionType register(TileConnectionType val) {
+				addRegistry(val);
+				return val;
+			}
+
+			public static final TileConnectionType GRASS = register(new TileConnectionType("GRASS"));
+			public static final TileConnectionType SAND = register(new TileConnectionType("SAND"));
+			public static final TileConnectionType FLUID = register(new TileConnectionType("FLUID"));
+
+			public final String key;
+
+			public TileConnectionType(String key) {
+				this.key = key.toUpperCase();
+			}
+		}
+	}
+
 	public int light;
 	protected boolean maySpawn;
 
@@ -140,7 +205,7 @@ public abstract class Tile {
 	}
 
 	/** Sees if the tile connects to a fluid. */
-	public boolean connectsToLiquid() { return connectsToFluid; }
+	public boolean connectsToLiquid() { return connections.contains(TileConnections.TileConnectionType.FLUID); }
 
 	public int getData(String data) {
 		try {

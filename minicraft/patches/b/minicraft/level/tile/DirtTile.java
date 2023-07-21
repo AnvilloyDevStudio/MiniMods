@@ -20,7 +20,7 @@ public class DirtTile extends Tile {
 		levelSprite[2] = new Sprite(12, 4, 2, 2, 1);
 	}
 
-	protected DirtTile(String name) {
+	public DirtTile(String name) {
 		super(name, levelSprite[0]);
 		maySpawn = true;
 	}

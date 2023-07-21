@@ -1,6 +1,6 @@
 package io.github.anvilloystudio.minimods.api;
 
-import io.github.anvilloystudio.minimods.api.interfaces.Tickable;
+import io.github.anvilloystudio.minimods.coremods.interfaces.Tickable;
 import minicraft.screen.Display;
 
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -17,6 +17,6 @@ public class ModProcedure {
 	public static final CopyOnWriteArrayList<Tickable> tickables0 = new CopyOnWriteArrayList<>();
 	/** These {@link Tickable} objects are invoked when {@link minicraft.core.Updater#paused} is true. */
 	public static final CopyOnWriteArrayList<Tickable> tickables1 = new CopyOnWriteArrayList<>();
-	/** These {@link Tickable} objects are invoked when focus. */
+	/** These {@link Tickable} objects are invoked when focused. */
 	public static final CopyOnWriteArrayList<Tickable> tickables2 = new CopyOnWriteArrayList<>();
 }

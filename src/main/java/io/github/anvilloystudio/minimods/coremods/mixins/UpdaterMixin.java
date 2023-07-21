@@ -1,12 +1,11 @@
 package io.github.anvilloystudio.minimods.coremods.mixins;
 
+import io.github.anvilloystudio.minimods.coremods.CommandWindow;
+import minicraft.core.Updater;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import io.github.anvilloystudio.minimods.coremods.CommandWindow;
-import minicraft.core.Updater;
 
 @Mixin(Updater.class)
 public class UpdaterMixin {

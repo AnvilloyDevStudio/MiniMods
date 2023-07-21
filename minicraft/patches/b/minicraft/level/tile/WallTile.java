@@ -23,13 +23,15 @@ public class WallTile extends Tile {
 	protected Material type;
 	private ConnectorSprite sprite;
 
-	protected WallTile(Material type) {
-		super(type.name() + " Wall", (ConnectorSprite) null);
+	public WallTile(Material type) {
+		super(type.name + " Wall", (ConnectorSprite) null);
 		this.type = type;
-		switch (type) {
-			case Wood: sprite = new ConnectorSprite(WallTile.class, new Sprite(0, 14, 3, 3, 1, 3), new Sprite(3, 14, 2, 2, 1, 3), new Sprite(1, 15, 2, 2, 1, 0, true)); break;
-			case Stone: sprite = new ConnectorSprite(WallTile.class, new Sprite(10, 14, 3, 3, 1, 3), new Sprite(13, 14, 2, 2, 1, 3), new Sprite(11, 15, 2, 2, 1, 0, true)); break;
-			case Obsidian: sprite = new ConnectorSprite(WallTile.class, new Sprite(20, 14, 3, 3, 1, 3), new Sprite(23, 14, 2, 2, 1, 3), new Sprite(21, 15, 2, 2, 1, 0, true)); break;
+		if (type == Material.Wood) {
+			sprite = new ConnectorSprite(WallTile.class, new Sprite(0, 14, 3, 3, 1, 3), new Sprite(3, 14, 2, 2, 1, 3), new Sprite(1, 15, 2, 2, 1, 0, true));
+		} else if (type == Material.Stone) {
+			sprite = new ConnectorSprite(WallTile.class, new Sprite(10, 14, 3, 3, 1, 3), new Sprite(13, 14, 2, 2, 1, 3), new Sprite(11, 15, 2, 2, 1, 0, true));
+		} else if (type == Material.Obsidian) {
+			sprite = new ConnectorSprite(WallTile.class, new Sprite(20, 14, 3, 3, 1, 3), new Sprite(23, 14, 2, 2, 1, 3), new Sprite(21, 15, 2, 2, 1, 0, true));
 		}
 		csprite = sprite;
 	}
@@ -79,25 +81,19 @@ public class WallTile extends Tile {
 		level.add(new TextParticle("" + dmg, x * 16 + 8, y * 16 + 8, Color.RED));
 		if (damage >= sbwHealth) {
 			String itemName = "", tilename = "";
-			switch (type) { // Get what tile to set and what item to drop
-				case Wood: {
-					itemName = "Plank";
-					tilename = "Wood Planks";
-					break;
-				}
-				case Stone: {
-					itemName = "Stone Brick";
-					tilename = "Stone Bricks";
-					break;
-				}
-				case Obsidian: {
-					itemName = "Obsidian Brick";
-					tilename = "Obsidian";
-					break;
-				}
+			// Get what tile to set and what item to drop
+			if (type == Material.Wood) {
+				itemName = "Plank";
+				tilename = "Wood Planks";
+			} else if (type == Material.Stone) {
+				itemName = "Stone Brick";
+				tilename = "Stone Bricks";
+			} else if (type == Material.Obsidian) {
+				itemName = "Obsidian Brick";
+				tilename = "Obsidian";
 			}
 
-			level.dropItem(x * 16 + 8, y * 16 + 8, 1, 3 - type.ordinal(), Items.get(itemName));
+			level.dropItem(x * 16 + 8, y * 16 + 8, 1, id < 3 ? 3 - type.id : 2, Items.get(itemName));
 			level.setTile(x, y, Tiles.get(tilename));
 		} else {
 			level.setData(x, y, damage);
@@ -114,6 +110,6 @@ public class WallTile extends Tile {
 	}
 
 	public String getName(int data) {
-		return Material.values[data].name() + " Wall";
+		return Material.getRegistries().stream().filter(v -> v.id == data).findAny().orElse(Material.Wood).name + " Wall";
 	}
 }

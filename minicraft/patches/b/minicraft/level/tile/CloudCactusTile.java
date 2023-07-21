@@ -20,7 +20,7 @@ import minicraft.level.Level;
 public class CloudCactusTile extends Tile {
 	private static Sprite sprite = new Sprite(6, 2, 2, 2, 1);
 
-	protected CloudCactusTile(String name) {
+	public CloudCactusTile(String name) {
 		super(name, sprite);
 	}
 

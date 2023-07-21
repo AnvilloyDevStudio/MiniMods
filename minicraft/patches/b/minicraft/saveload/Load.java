@@ -1,21 +1,5 @@
 package minicraft.saveload;
 
-import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.imageio.ImageIO;
-
-import minicraft.screen.SkinDisplay;
-import org.jetbrains.annotations.Nullable;
-
 import minicraft.core.Game;
 import minicraft.core.Network;
 import minicraft.core.Updater;
@@ -66,6 +50,20 @@ import minicraft.level.tile.Tiles;
 import minicraft.network.MinicraftServer;
 import minicraft.screen.LoadingDisplay;
 import minicraft.screen.MultiplayerDisplay;
+import minicraft.screen.SkinDisplay;
+import org.jetbrains.annotations.Nullable;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Load {
 
@@ -499,7 +497,7 @@ public class Load {
 
 			for (String s : effects) {
 				String[] effect = s.split(";");
-				PotionType pName = Enum.valueOf(PotionType.class, effect[0]);
+				PotionType pName = PotionType.getRegistry(effect[0].toUpperCase());
 				PotionItem.applyPotion(player, pName, Integer.parseInt(effect[1]));
 			}
 		}
@@ -763,7 +761,8 @@ public class Load {
 			if (mob != null)
 				newEntity = new Spawner(mob);
 		} else if (newEntity instanceof Lantern && worldVer.compareTo(new Version("1.9.4")) >= 0 && info.size() > 3) {
-			newEntity = new Lantern(Lantern.Type.values()[Integer.parseInt(info.get(2))]);
+			int num = Integer.parseInt(info.get(2));
+			newEntity = new Lantern(Lantern.Type.getRegistries().stream().filter(v -> v.id == num).findAny().orElse(Lantern.Type.NORM));
 		}
 
 		if (!isLocalSave) {

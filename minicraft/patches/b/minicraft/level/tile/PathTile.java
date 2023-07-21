@@ -15,7 +15,7 @@ public class PathTile extends Tile {
 
     public PathTile(String name) {
         super(name, sprite);
-        connectsToGrass = true;
+		connections.add(TileConnections.TileConnectionType.GRASS);
         maySpawn = true;
     }
 

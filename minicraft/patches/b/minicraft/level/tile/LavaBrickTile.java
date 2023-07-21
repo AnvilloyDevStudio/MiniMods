@@ -14,7 +14,7 @@ import minicraft.level.Level;
 public class LavaBrickTile extends Tile {
 	private static Sprite sprite = new Sprite(19, 2, 2, 2, 1);
 
-	protected LavaBrickTile(String name) {
+	public LavaBrickTile(String name) {
 		super(name, sprite);
 	}
 

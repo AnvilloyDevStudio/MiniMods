@@ -1,0 +1,21 @@
+--- a\minicraft\level\tile\HoleTile.java
++++ b\minicraft\level\tile\HoleTile.java
+@@ -13,13 +13,13 @@
+ 			return tile.connectsToLiquid();
+ 		}
+ 	};
+-	
++
+ 	protected HoleTile(String name) {
+ 		super(name, sprite);
+-		connectsToSand = true;
+-		connectsToFluid = true;
++		connections.add(TileConnections.TileConnectionType.SAND);
++		connections.add(TileConnections.TileConnectionType.FLUID);
+ 	}
+-	
++
+ 	public void render(Screen screen, Level level, int x, int y) {
+ 		sprite.sparse.color = DirtTile.dCol(level.depth);
+ 		sprite.render(screen, level, x, y);
+

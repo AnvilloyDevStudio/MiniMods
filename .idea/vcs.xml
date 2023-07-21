@@ -2,10 +2,9 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/minicraft/source" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/mods/core-ores" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/mods/core-ores/Mod-Core-Ores" vcs="" />
     <mapping directory="$PROJECT_DIR$/mods/core-redstone" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/mods/core-redstone-extra" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/mods/core-redstone/Mod-Core-Redstone" vcs="" />
   </component>
 </project>

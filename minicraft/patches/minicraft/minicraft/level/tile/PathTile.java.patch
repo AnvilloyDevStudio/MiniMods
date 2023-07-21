@@ -1,5 +1,14 @@
 --- a\minicraft\level\tile\PathTile.java
 +++ b\minicraft\level\tile\PathTile.java
+@@ -15,7 +15,7 @@
+ 
+     public PathTile(String name) {
+         super(name, sprite);
+-        connectsToGrass = true;
++		connections.add(TileConnections.TileConnectionType.GRASS);
+         maySpawn = true;
+     }
+ 
 @@ -23,7 +23,7 @@
          if (item instanceof ToolItem) {
              ToolItem tool = (ToolItem) item;

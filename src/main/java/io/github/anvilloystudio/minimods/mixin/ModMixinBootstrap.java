@@ -1,14 +1,13 @@
 package io.github.anvilloystudio.minimods.mixin;
 
-import java.lang.reflect.Method;
-
+import io.github.anvilloystudio.minimods.core.ModContainer;
+import io.github.anvilloystudio.minimods.core.Mods;
+import io.github.anvilloystudio.minimods.loader.ModLoadingHandler;
 import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 import org.spongepowered.asm.mixin.Mixins;
 
-import io.github.anvilloystudio.minimods.core.ModContainer;
-import io.github.anvilloystudio.minimods.core.Mods;
-import io.github.anvilloystudio.minimods.loader.ModLoadingHandler;
+import java.lang.reflect.Method;
 
 public class ModMixinBootstrap {
 	public static void init() {
@@ -18,9 +17,8 @@ public class ModMixinBootstrap {
 		(ModLoadingHandler.secondaryPro = new ModLoadingHandler.Progress(Mods.mods.size())).text = "Initializing Mixin";
 		MixinBootstrap.init();
 
-		// Load coremods Mixin config here
-		Mixins.addConfigurations("mixins.json"); // API.
-		Mixins.addConfigurations("coremods-mixins.json"); // Coremods.
+		// Load CoreMods Mixin config here
+		Mixins.addConfigurations("mixins.json"); // CoreMods.
 
 		for (ModContainer mod : Mods.mods) {
 			ModLoadingHandler.secondaryPro.cur++;
@@ -29,7 +27,8 @@ public class ModMixinBootstrap {
 				Mixins.addConfiguration(mod.mixinConfig);
 			} catch (Throwable t) {
 				throw new RuntimeException(String.format("Error creating Mixin config %s for mod %s", mod.mixinConfig, mod.metadata.modId), t);
-			} else ModLoadingHandler.secondaryPro.text = null;
+			} else //noinspection UnusedAssignment
+				ModLoadingHandler.secondaryPro.text = null;
 		}
 
 		ModLoadingHandler.secondaryPro.text = "Mixin Configs Added";
